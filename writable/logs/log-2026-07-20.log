@@ -1,0 +1,285 @@
+CRITICAL - 2026-07-20 08:08:38 --> CodeIgniter\Exceptions\CriticalError: The required PHP extension "sqlite3" is not loaded. Install and enable it to use "SQLite3" driver.
+[Method: POST, Route: login]
+in SYSTEMPATH\Database\Database.php on line 186.
+ 1 SYSTEMPATH\Database\Database.php(59): CodeIgniter\Database\Database->checkDbExtension('SQLite3')
+ 2 SYSTEMPATH\Database\Config.php(82): CodeIgniter\Database\Database->load([...], 'default')
+ 3 APPPATH\Controllers\Auth.php(13): CodeIgniter\Database\Config::connect()
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Auth->loginAuth()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\public\\index.php')
+CRITICAL - 2026-07-20 08:08:51 --> CodeIgniter\Exceptions\CriticalError: The required PHP extension "sqlite3" is not loaded. Install and enable it to use "SQLite3" driver.
+[Method: POST, Route: login]
+in SYSTEMPATH\Database\Database.php on line 186.
+ 1 SYSTEMPATH\Database\Database.php(59): CodeIgniter\Database\Database->checkDbExtension('SQLite3')
+ 2 SYSTEMPATH\Database\Config.php(82): CodeIgniter\Database\Database->load([...], 'default')
+ 3 APPPATH\Controllers\Auth.php(13): CodeIgniter\Database\Config::connect()
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Auth->loginAuth()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\public\\index.php')
+CRITICAL - 2026-07-20 08:10:28 --> CodeIgniter\Exceptions\CriticalError: The required PHP extension "sqlite3" is not loaded. Install and enable it to use "SQLite3" driver.
+[Method: POST, Route: login]
+in SYSTEMPATH\Database\Database.php on line 186.
+ 1 SYSTEMPATH\Database\Database.php(59): CodeIgniter\Database\Database->checkDbExtension('SQLite3')
+ 2 SYSTEMPATH\Database\Config.php(82): CodeIgniter\Database\Database->load([...], 'default')
+ 3 APPPATH\Controllers\Auth.php(13): CodeIgniter\Database\Config::connect()
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Auth->loginAuth()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\public\\index.php')
+CRITICAL - 2026-07-20 08:10:31 --> CodeIgniter\Exceptions\CriticalError: The required PHP extension "sqlite3" is not loaded. Install and enable it to use "SQLite3" driver.
+[Method: POST, Route: login]
+in SYSTEMPATH\Database\Database.php on line 186.
+ 1 SYSTEMPATH\Database\Database.php(59): CodeIgniter\Database\Database->checkDbExtension('SQLite3')
+ 2 SYSTEMPATH\Database\Config.php(82): CodeIgniter\Database\Database->load([...], 'default')
+ 3 APPPATH\Controllers\Auth.php(13): CodeIgniter\Database\Config::connect()
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Auth->loginAuth()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\public\\index.php')
+CRITICAL - 2026-07-20 08:12:29 --> CodeIgniter\Exceptions\CriticalError: The required PHP extension "sqlite3" is not loaded. Install and enable it to use "SQLite3" driver.
+[Method: POST, Route: login]
+in SYSTEMPATH\Database\Database.php on line 186.
+ 1 SYSTEMPATH\Database\Database.php(59): CodeIgniter\Database\Database->checkDbExtension('SQLite3')
+ 2 SYSTEMPATH\Database\Config.php(82): CodeIgniter\Database\Database->load([...], 'default')
+ 3 APPPATH\Controllers\Auth.php(13): CodeIgniter\Database\Config::connect()
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Auth->loginAuth()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\public\\index.php')
+CRITICAL - 2026-07-20 08:12:30 --> CodeIgniter\Exceptions\CriticalError: The required PHP extension "sqlite3" is not loaded. Install and enable it to use "SQLite3" driver.
+[Method: POST, Route: login]
+in SYSTEMPATH\Database\Database.php on line 186.
+ 1 SYSTEMPATH\Database\Database.php(59): CodeIgniter\Database\Database->checkDbExtension('SQLite3')
+ 2 SYSTEMPATH\Database\Config.php(82): CodeIgniter\Database\Database->load([...], 'default')
+ 3 APPPATH\Controllers\Auth.php(13): CodeIgniter\Database\Config::connect()
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Auth->loginAuth()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\public\\index.php')
+ERROR - 2026-07-20 08:13:00 --> Unable to prepare statement: 1, no such table: utilisateurs
+in SYSTEMPATH\Database\SQLite3\Connection.php on line 164.
+ 1 SYSTEMPATH\Database\SQLite3\Connection.php(164): SQLite3->query('SELECT * FROM utilisateurs WHERE numero = \'0341000001\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\SQLite3\Connection->execute('SELECT * FROM utilisateurs WHERE numero = \'0341000001\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT * FROM utilisateurs WHERE numero = \'0341000001\'')
+ 4 APPPATH\Controllers\Auth.php(15): CodeIgniter\Database\BaseConnection->query('SELECT * FROM utilisateurs WHERE numero = \'0341000001\'')
+ 5 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Auth->loginAuth()
+ 6 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 7 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\public\\index.php')
+CRITICAL - 2026-07-20 08:13:00 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to prepare statement: 1, no such table: utilisateurs
+[Method: POST, Route: login]
+in SYSTEMPATH\Database\BaseConnection.php on line 865.
+ 1 APPPATH\Controllers\Auth.php(15): CodeIgniter\Database\BaseConnection->query('SELECT * FROM utilisateurs WHERE numero = \'0341000001\'')
+ 2 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Auth->loginAuth()
+ 3 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 4 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 8 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\public\\index.php')
+CRITICAL - 2026-07-20 08:13:00 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unable to prepare statement: 1, no such table: utilisateurs
+in SYSTEMPATH\Database\SQLite3\Connection.php on line 174.
+ 1 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\SQLite3\Connection->execute('SELECT * FROM utilisateurs WHERE numero = \'0341000001\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT * FROM utilisateurs WHERE numero = \'0341000001\'')
+ 3 APPPATH\Controllers\Auth.php(15): CodeIgniter\Database\BaseConnection->query('SELECT * FROM utilisateurs WHERE numero = \'0341000001\'')
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Auth->loginAuth()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\public\\index.php')
+CRITICAL - 2026-07-20 08:13:00 --> [Caused by] Exception: Unable to prepare statement: 1, no such table: utilisateurs
+in SYSTEMPATH\Database\SQLite3\Connection.php on line 164.
+ 1 SYSTEMPATH\Database\SQLite3\Connection.php(164): SQLite3->query('SELECT * FROM utilisateurs WHERE numero = \'0341000001\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\SQLite3\Connection->execute('SELECT * FROM utilisateurs WHERE numero = \'0341000001\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT * FROM utilisateurs WHERE numero = \'0341000001\'')
+ 4 APPPATH\Controllers\Auth.php(15): CodeIgniter\Database\BaseConnection->query('SELECT * FROM utilisateurs WHERE numero = \'0341000001\'')
+ 5 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Auth->loginAuth()
+ 6 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 7 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\public\\index.php')
+ERROR - 2026-07-20 08:14:08 --> Unable to prepare statement: 1, no such table: users
+in SYSTEMPATH\Database\SQLite3\Connection.php on line 164.
+ 1 SYSTEMPATH\Database\SQLite3\Connection.php(164): SQLite3->query('SELECT * FROM users WHERE numero = \'0341000001\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\SQLite3\Connection->execute('SELECT * FROM users WHERE numero = \'0341000001\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT * FROM users WHERE numero = \'0341000001\'')
+ 4 APPPATH\Controllers\Auth.php(15): CodeIgniter\Database\BaseConnection->query('SELECT * FROM users WHERE numero = \'0341000001\'')
+ 5 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Auth->loginAuth()
+ 6 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 7 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\public\\index.php')
+CRITICAL - 2026-07-20 08:14:08 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to prepare statement: 1, no such table: users
+[Method: POST, Route: login]
+in SYSTEMPATH\Database\BaseConnection.php on line 865.
+ 1 APPPATH\Controllers\Auth.php(15): CodeIgniter\Database\BaseConnection->query('SELECT * FROM users WHERE numero = \'0341000001\'')
+ 2 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Auth->loginAuth()
+ 3 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 4 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 8 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\public\\index.php')
+CRITICAL - 2026-07-20 08:14:08 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unable to prepare statement: 1, no such table: users
+in SYSTEMPATH\Database\SQLite3\Connection.php on line 174.
+ 1 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\SQLite3\Connection->execute('SELECT * FROM users WHERE numero = \'0341000001\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT * FROM users WHERE numero = \'0341000001\'')
+ 3 APPPATH\Controllers\Auth.php(15): CodeIgniter\Database\BaseConnection->query('SELECT * FROM users WHERE numero = \'0341000001\'')
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Auth->loginAuth()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\public\\index.php')
+CRITICAL - 2026-07-20 08:14:08 --> [Caused by] Exception: Unable to prepare statement: 1, no such table: users
+in SYSTEMPATH\Database\SQLite3\Connection.php on line 164.
+ 1 SYSTEMPATH\Database\SQLite3\Connection.php(164): SQLite3->query('SELECT * FROM users WHERE numero = \'0341000001\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\SQLite3\Connection->execute('SELECT * FROM users WHERE numero = \'0341000001\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT * FROM users WHERE numero = \'0341000001\'')
+ 4 APPPATH\Controllers\Auth.php(15): CodeIgniter\Database\BaseConnection->query('SELECT * FROM users WHERE numero = \'0341000001\'')
+ 5 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Auth->loginAuth()
+ 6 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 7 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\public\\index.php')
+ERROR - 2026-07-20 08:14:38 --> Unable to prepare statement: 1, no such table: clients
+in SYSTEMPATH\Database\SQLite3\Connection.php on line 164.
+ 1 SYSTEMPATH\Database\SQLite3\Connection.php(164): SQLite3->query('SELECT * FROM clients WHERE numero = \'0341000001\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\SQLite3\Connection->execute('SELECT * FROM clients WHERE numero = \'0341000001\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT * FROM clients WHERE numero = \'0341000001\'')
+ 4 APPPATH\Controllers\Auth.php(15): CodeIgniter\Database\BaseConnection->query('SELECT * FROM clients WHERE numero = \'0341000001\'')
+ 5 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Auth->loginAuth()
+ 6 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 7 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\public\\index.php')
+CRITICAL - 2026-07-20 08:14:38 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to prepare statement: 1, no such table: clients
+[Method: POST, Route: login]
+in SYSTEMPATH\Database\BaseConnection.php on line 865.
+ 1 APPPATH\Controllers\Auth.php(15): CodeIgniter\Database\BaseConnection->query('SELECT * FROM clients WHERE numero = \'0341000001\'')
+ 2 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Auth->loginAuth()
+ 3 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 4 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 8 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\public\\index.php')
+CRITICAL - 2026-07-20 08:14:38 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unable to prepare statement: 1, no such table: clients
+in SYSTEMPATH\Database\SQLite3\Connection.php on line 174.
+ 1 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\SQLite3\Connection->execute('SELECT * FROM clients WHERE numero = \'0341000001\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT * FROM clients WHERE numero = \'0341000001\'')
+ 3 APPPATH\Controllers\Auth.php(15): CodeIgniter\Database\BaseConnection->query('SELECT * FROM clients WHERE numero = \'0341000001\'')
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Auth->loginAuth()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\public\\index.php')
+CRITICAL - 2026-07-20 08:14:38 --> [Caused by] Exception: Unable to prepare statement: 1, no such table: clients
+in SYSTEMPATH\Database\SQLite3\Connection.php on line 164.
+ 1 SYSTEMPATH\Database\SQLite3\Connection.php(164): SQLite3->query('SELECT * FROM clients WHERE numero = \'0341000001\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\SQLite3\Connection->execute('SELECT * FROM clients WHERE numero = \'0341000001\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT * FROM clients WHERE numero = \'0341000001\'')
+ 4 APPPATH\Controllers\Auth.php(15): CodeIgniter\Database\BaseConnection->query('SELECT * FROM clients WHERE numero = \'0341000001\'')
+ 5 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Auth->loginAuth()
+ 6 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 7 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\public\\index.php')
+CRITICAL - 2026-07-20 08:59:46 --> ErrorException: Undefined property: CodeIgniter\View\View::$request
+[Method: GET, Route: solde]
+in APPPATH\Views\Client\Solde.php on line 2.
+ 1 APPPATH\Views\Client\Solde.php(2): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: CodeIgniter\\View\\View::$request', 'D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\app\\Views\\Client\\Solde.php', 2)
+ 2 SYSTEMPATH\View\View.php(240): include('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\app\\Views\\Client\\Solde.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('Client/Solde', [], true)
+ 5 APPPATH\Controllers\Client.php(14): view('Client/Solde')
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->solde()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\public\\index.php')
+CRITICAL - 2026-07-20 09:00:26 --> ErrorException: Undefined property: CodeIgniter\View\View::$request
+[Method: GET, Route: solde]
+in APPPATH\Views\Client\Solde.php on line 2.
+ 1 APPPATH\Views\Client\Solde.php(2): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: CodeIgniter\\View\\View::$request', 'D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\app\\Views\\Client\\Solde.php', 2)
+ 2 SYSTEMPATH\View\View.php(240): include('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\app\\Views\\Client\\Solde.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('Client/Solde', [], true)
+ 5 APPPATH\Controllers\Client.php(14): view('Client/Solde')
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->solde()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\public\\index.php')
+CRITICAL - 2026-07-20 09:01:14 --> ErrorException: Undefined property: CodeIgniter\View\View::$request
+[Method: GET, Route: solde]
+in APPPATH\Views\Client\Solde.php on line 2.
+ 1 APPPATH\Views\Client\Solde.php(2): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: CodeIgniter\\View\\View::$request', 'D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\app\\Views\\Client\\Solde.php', 2)
+ 2 SYSTEMPATH\View\View.php(240): include('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\app\\Views\\Client\\Solde.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('Client/Solde', [], true)
+ 5 APPPATH\Controllers\Client.php(14): view('Client/Solde')
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->solde()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\public\\index.php')
+CRITICAL - 2026-07-20 09:01:40 --> ErrorException: Undefined property: CodeIgniter\View\View::$request
+[Method: GET, Route: solde]
+in APPPATH\Views\Client\Solde.php on line 2.
+ 1 APPPATH\Views\Client\Solde.php(2): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: CodeIgniter\\View\\View::$request', 'D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\app\\Views\\Client\\Solde.php', 2)
+ 2 SYSTEMPATH\View\View.php(240): include('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\app\\Views\\Client\\Solde.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('Client/Solde', [], true)
+ 5 APPPATH\Controllers\Client.php(14): view('Client/Solde')
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->solde()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\ITU\\Web\\S4\\S4 Design\\Final S4\\4082_4394\\public\\index.php')
