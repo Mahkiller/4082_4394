@@ -19,8 +19,7 @@ class Transaction extends BaseController
             ->get()
             ->getRow();
 
-        $fraisTransaction = $row ? $row->frais_montant : 0;
-        $nouveauSolde = session()->get('user_solde') + $montant - $fraisTransaction;
+        $nouveauSolde = session()->get('user_solde') + $montant;
 
         // MAJ dans la session
         session()->set('user_solde', $nouveauSolde);
@@ -29,7 +28,20 @@ class Transaction extends BaseController
         $db->table('clients')
             ->where('id', $clientId)
             ->update(['solde' => $nouveauSolde]);
-        return redirect()->to('/solde');
+
+        // Enregistrer la transaction
+        $reference = 'TXN-' . date('Ymd') . '-' . random_int(1000, 9999);
+        $db->table('transactions')->insert([
+            'client_id' => $clientId,
+            'transaction_type_id' => $typeTransaction,
+            'montant' => $montant,
+            'frais_applique' => 0,
+            'montant_net' => $montant,
+            'reference' => $reference,
+            'status' => 'Reussi',
+        ]);
+
+        return redirect()->to('/solde')->with('success', 'Dépôt effectué avec succès.');
     }
 
     public function faireRetrait()
@@ -61,14 +73,27 @@ class Transaction extends BaseController
         $db->table('clients')
             ->where('id', $clientId)
             ->update(['solde' => $nouveauSolde]);
-        return redirect()->to('/solde');
+
+        // Enregistrer la transaction
+        $reference = 'TXN-' . date('Ymd') . '-' . random_int(1000, 9999);
+        $db->table('transactions')->insert([
+            'client_id' => $clientId,
+            'transaction_type_id' => $typeTransaction,
+            'montant' => $montant,
+            'frais_applique' => $fraisTransaction,
+            'montant_net' => $montant - $fraisTransaction,
+            'reference' => $reference,
+            'status' => 'Reussi',
+        ]);
+
+        return redirect()->to('/solde')->with('success', 'Retrait effectué avec succès.');
     }
     }
 
     public function faireTransfert()
     {
-        $montant = (float) $this->request->getPost('montant');
-        $destinataire = trim($this->request->getPost('destinataire') ?? '');
+        $montant = $this->request->getPost('montant');
+        $destinataire = $this->request->getPost('destinataire');
         $db = \Config\Database::connect();
         $clientId = session()->get('user_id');
         $typeTransaction = 3;
@@ -81,16 +106,12 @@ class Transaction extends BaseController
             ->get()
             ->getRow();
 
-        $fraisTransaction = $row ? (float) $row->frais_montant : 0;
+        $fraisTransaction = $row ? $row->frais_montant : 0;
 
-        // Récupérer l'émetteur et son opérateur
-        $emetteur = $db->table('clients')->where('id', $clientId)->get()->getRow();
-        $sourcePrefixe = substr($emetteur->numero, 0, 3);
-        $sourceOpRow = $db->table('operateur_prefixe')
-            ->where('prefixe', $sourcePrefixe)
-            ->get()
-            ->getRow();
-        $sourceOpId = $sourceOpRow ? (int) $sourceOpRow->operateur_id : null;
+        // Vérifier le solde suffisant (montant + frais)
+        if ($montant + $fraisTransaction > session()->get('user_solde')) {
+            return redirect()->to('/transfert')->with('error', 'Solde insuffisant pour effectuer ce transfert.');
+        }
 
         // Récupérer le destinataire et son opérateur
         $destinataireRow = $db->table('clients')
@@ -106,35 +127,7 @@ class Transaction extends BaseController
             return redirect()->to('/transfert')->with('error', 'Vous ne pouvez pas vous transférer de l\'argent à vous-même.');
         }
 
-        $destPrefixe = substr($destinataireRow->numero, 0, 3);
-        $destOpRow = $db->table('operateur_prefixe')
-            ->where('prefixe', $destPrefixe)
-            ->get()
-            ->getRow();
-        $destOpId = $destOpRow ? (int) $destOpRow->operateur_id : null;
-
-        // Calcul commission inter-opérateur
-        $commission = 0.0;
-        if ($sourceOpId && $destOpId && $sourceOpId != $destOpId) {
-            $com = $db->table('commission')
-                ->where('operateur_source_id', $sourceOpId)
-                ->where('operateur_destinataire_id', $destOpId)
-                ->where('est_actif', 1)
-                ->get()
-                ->getRow();
-            if ($com) {
-                $commission = (float) $com->pourcentage / 100 * $montant;
-            }
-        }
-
-        $totalDebit = $montant + $fraisTransaction + $commission;
-
-        // Vérifier le solde suffisant
-        if ($totalDebit > session()->get('user_solde')) {
-            return redirect()->to('/transfert')->with('error', 'Solde insuffisant pour effectuer ce transfert.');
-        }
-
-        $nouveauSoldeEmetteur = session()->get('user_solde') - $totalDebit;
+        $nouveauSoldeEmetteur = session()->get('user_solde') - $montant - $fraisTransaction;
         $nouveauSoldeDestinataire = $destinataireRow->solde + $montant;
 
         // Générer une référence unique
@@ -158,11 +151,9 @@ class Transaction extends BaseController
         $db->table('transactions')->insert([
             'client_id' => $clientId,
             'transaction_type_id' => $typeTransaction,
-            'montant' => $montant,
+            'montant' => $montantEnvoye,
             'frais_applique' => $fraisTransaction,
             'montant_net' => $montant,
-            'commission' => $commission,
-            'destinataire_numero' => $destinataire,
             'reference' => $reference,
             'status' => 'Reussi',
         ]);
@@ -173,6 +164,128 @@ class Transaction extends BaseController
             return redirect()->to('/transfert')->with('error', 'Une erreur est survenue lors du transfert.');
         }
 
-        return redirect()->to('/solde')->with('success', 'Transfert effectué avec succès.');
+        $fraisInfo = $fraisMode === 'inclus'
+            ? "Frais de {$fraisTransaction} Ar inclus dans l'envoi."
+            : "Frais de {$fraisTransaction} Ar déductibles de votre solde.";
+        return redirect()->to('/solde')->with('success', "Transfert effectué avec succès. {$montantEnvoye} Ar envoyé au destinataire. {$fraisInfo}");
+    }
+
+    public function faireTransfertMultiple()
+    {
+        $montantTotal = $this->request->getPost('montant_total');
+        $destinatairesRaw = $this->request->getPost('destinataires');
+        $db = \Config\Database::connect();
+        $clientId = session()->get('user_id');
+        $typeTransaction = 3;
+
+        // Parse les numéros de destinataires
+        $numeros = array_filter(array_map('trim', explode(',', $destinatairesRaw)), fn($n) => $n !== '');
+        $nombreDestinataires = count($numeros);
+
+        if ($nombreDestinataires === 0) {
+            return redirect()->to('/transfert')->with('error', 'Veuillez indiquer au moins un numéro de destinataire.');
+        }
+
+        $montantParDestinataire = floor($montantTotal / $nombreDestinataires);
+
+        if ($montantParDestinataire < 100) {
+            return redirect()->to('/transfert')->with('error', 'Le montant par destinataire doit être d\'au moins 100 Ar.');
+        }
+
+        // Récupérer le frais correspondant au montant total depuis la table 'montant'
+        $row = $db->table('montant')
+            ->where('transaction_type_id', $typeTransaction)
+            ->where('min_montant <=', $montantTotal)
+            ->where('max_montant >=', $montantTotal)
+            ->get()
+            ->getRow();
+
+        $fraisTransaction = $row ? $row->frais_montant : 0;
+
+        // Vérifier le solde suffisant (montant total + frais)
+        if ($montantTotal + $fraisTransaction > session()->get('user_solde')) {
+            return redirect()->to('/transfert')->with('error', 'Solde insuffisant pour effectuer ce transfert multiple.');
+        }
+
+        // Récupérer l'opérateur de l'expéditeur
+        $expediteur = $db->table('clients')->where('id', $clientId)->get()->getRow();
+        $prefixeExpediteur = substr($expediteur->numero, 0, 3);
+        $operateurExpediteur = $db->table('operateur_prefixe')
+            ->where('prefixe', $prefixeExpediteur)
+            ->get()
+            ->getRow();
+
+        if (!$operateurExpediteur) {
+            return redirect()->to('/transfert')->with('error', 'Opérateur de l\'expéditeur introuvable.');
+        }
+
+        // Récupérer tous les préfixes du même opérateur que l'expéditeur
+        $prefixesOperateur = $db->table('operateur_prefixe')
+            ->where('operateur_id', $operateurExpediteur->operateur_id)
+            ->get()
+            ->getResult();
+
+        $prefixesAutorises = array_column($prefixesOperateur, 'prefixe');
+
+        // Récupérer tous les destinataires et vérifier l'opérateur
+        $destinataires = [];
+        foreach ($numeros as $numero) {
+            $dest = $db->table('clients')->where('numero', $numero)->get()->getRow();
+            if (!$dest) {
+                return redirect()->to('/transfert')->with('error', "Le numéro {$numero} est invalide.");
+            }
+            if ($dest->id == $clientId) {
+                return redirect()->to('/transfert')->with('error', "Vous ne pouvez pas vous transférer de l'argent à vous-même ({$numero}).");
+            }
+
+            $prefixeDest = substr($dest->numero, 0, 3);
+
+            if (!in_array($prefixeDest, $prefixesAutorises)) {
+                return redirect()->to('/transfert')->with('error', "Le numéro {$numero} n'appartient pas au même opérateur que vous. Le transfert multiple n'est disponible que pour le même opérateur.");
+            }
+
+            $destinataires[] = $dest;
+        }
+
+        $nouveauSoldeEmetteur = session()->get('user_solde') - $montantTotal - $fraisTransaction;
+
+        // Démarrer une transaction
+        $db->transStart();
+
+        // MAJ solde émetteur dans la session et la base
+        session()->set('user_solde', $nouveauSoldeEmetteur);
+        $db->table('clients')
+            ->where('id', $clientId)
+            ->update(['solde' => $nouveauSoldeEmetteur]);
+
+        // Pour chaque destinataire
+        foreach ($destinataires as $dest) {
+            $nouveauSoldeDestinataire = $dest->solde + $montantParDestinataire;
+
+            // MAJ solde destinataire
+            $db->table('clients')
+                ->where('id', $dest->id)
+                ->update(['solde' => $nouveauSoldeDestinataire]);
+
+            // Enregistrer la transaction
+            $reference = 'TXN-' . date('Ymd') . '-' . random_int(1000, 9999);
+            $db->table('transactions')->insert([
+                'client_id' => $clientId,
+                'transaction_type_id' => $typeTransaction,
+                'montant' => $montantParDestinataire,
+                'frais_applique' => 0,
+                'montant_net' => $montantParDestinataire,
+                'reference' => $reference,
+                'status' => 'Reussi',
+            ]);
+        }
+
+        $db->transComplete();
+
+        if ($db->transStatus() === false) {
+            return redirect()->to('/transfert')->with('error', 'Une erreur est survenue lors du transfert multiple.');
+        }
+
+        return redirect()->to('/solde')->with('success', "Transfert multiple effectué avec succès. {$montantParDestinataire} Ar envoyé à {$nombreDestinataires} destinataire(s).");
     }
 }

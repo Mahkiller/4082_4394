@@ -48,4 +48,5 @@ $routes->get('/retrait', 'Client::retrait');
 $routes->post('/retrait', 'Transaction::faireRetrait');
 $routes->get('/transfert', 'Client::transfert');
 $routes->post('/transfert', 'Transaction::faireTransfert');
+$routes->post('/transfert-multiple', 'Transaction::faireTransfertMultiple');
 $routes->get('/logout', 'Client::logout');

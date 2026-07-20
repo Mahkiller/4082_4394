@@ -26,7 +26,26 @@ class Client extends BaseController
 
     public function transfert()
     {
-        return view('Client/Transfert');
+        $db = \Config\Database::connect();
+        $clientId = session()->get('user_id');
+
+        $client = $db->table('clients')->where('id', $clientId)->get()->getRow();
+        $prefixeClient = substr($client->numero, 0, 3);
+        $operateurClient = $db->table('operateur_prefixe')
+            ->where('prefixe', $prefixeClient)
+            ->get()
+            ->getRow();
+
+        $prefixesAutorises = [];
+        if ($operateurClient) {
+            $prefixes = $db->table('operateur_prefixe')
+                ->where('operateur_id', $operateurClient->operateur_id)
+                ->get()
+                ->getResult();
+            $prefixesAutorises = array_column($prefixes, 'prefixe');
+        }
+
+        return view('Client/Transfert', ['prefixesAutorises' => $prefixesAutorises]);
     }
 
     public function historique()
