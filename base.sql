@@ -4,10 +4,33 @@ CREATE TABLE IF NOT EXISTS operateur_prefixe ( id INTEGER PRIMARY KEY AUTOINCREM
 CREATE TABLE IF NOT EXISTS transaction_type ( id INTEGER PRIMARY KEY AUTOINCREMENT, code VARCHAR(20) NOT NULL UNIQUE, label VARCHAR(50) NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP );
 CREATE TABLE IF NOT EXISTS montant ( id INTEGER PRIMARY KEY AUTOINCREMENT, transaction_type_id INTEGER NOT NULL, min_montant DECIMAL(15,2) NOT NULL, max_montant DECIMAL(15,2) NOT NULL, frais_montant DECIMAL(15,2) NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, updated_at DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (transaction_type_id) REFERENCES transaction_type(id), CONSTRAINT chk_min_max CHECK (min_montant <= max_montant) );
 CREATE TABLE IF NOT EXISTS clients ( id INTEGER PRIMARY KEY AUTOINCREMENT, numero VARCHAR(20) UNIQUE NOT NULL, solde DECIMAL(15,2) NOT NULL DEFAULT 0, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, updated_at DATETIME DEFAULT CURRENT_TIMESTAMP, deleted_at DATETIME DEFAULT NULL );
-CREATE TABLE IF NOT EXISTS transactions ( id INTEGER PRIMARY KEY AUTOINCREMENT, client_id INTEGER NOT NULL, transaction_type_id INTEGER NOT NULL, montant DECIMAL(15,2) NOT NULL, frais_applique DECIMAL(15,2) NOT NULL, montant_net DECIMAL(15,2) NOT NULL, reference VARCHAR(50) UNIQUE NOT NULL, status VARCHAR(20) NOT NULL DEFAULT 'En attente', created_at DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (client_id) REFERENCES clients(id), FOREIGN KEY (transaction_type_id) REFERENCES transaction_type(id), CONSTRAINT chk_status CHECK (status IN ('En attente', 'Reussi', 'Echoue')) );
+CREATE TABLE IF NOT EXISTS transactions ( id INTEGER PRIMARY KEY AUTOINCREMENT, client_id INTEGER NOT NULL, transaction_type_id INTEGER NOT NULL, montant DECIMAL(15,2) NOT NULL, frais_applique DECIMAL(15,2) NOT NULL, montant_net DECIMAL(15,2) NOT NULL, commission DECIMAL(15,2) NOT NULL DEFAULT 0, reference VARCHAR(50) UNIQUE NOT NULL, status VARCHAR(20) NOT NULL DEFAULT 'En attente', created_at DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (client_id) REFERENCES clients(id), FOREIGN KEY (transaction_type_id) REFERENCES transaction_type(id), CONSTRAINT chk_status CHECK (status IN ('En attente', 'Reussi', 'Echoue')) );
+
+-- Table commission
+CREATE TABLE IF NOT EXISTS commission (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    operateur_source_id INTEGER NOT NULL,
+    operateur_destinataire_id INTEGER NOT NULL,
+    pourcentage DECIMAL(5,2) NOT NULL DEFAULT 10.00,
+    description TEXT,
+    est_actif BOOLEAN DEFAULT 1,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (operateur_source_id) REFERENCES operateur(id),
+    FOREIGN KEY (operateur_destinataire_id) REFERENCES operateur(id),
+    CONSTRAINT unique_commission UNIQUE (operateur_source_id, operateur_destinataire_id),
+    CONSTRAINT check_diff_operateurs CHECK (operateur_source_id != operateur_destinataire_id)
+);
+
 CREATE TRIGGER update_operateur_updated_at AFTER UPDATE ON operateur BEGIN UPDATE operateur SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id; END;
 CREATE TRIGGER update_montant_updated_at AFTER UPDATE ON montant BEGIN UPDATE montant SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id; END;
 CREATE TRIGGER update_clients_updated_at AFTER UPDATE ON clients BEGIN UPDATE clients SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id; END;
+
+CREATE TRIGGER update_commission_updated_at 
+AFTER UPDATE ON commission
+BEGIN
+    UPDATE commission SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+END;
 CREATE INDEX idx_transaction_client ON transactions(client_id);
 CREATE INDEX idx_transaction_created ON transactions(created_at);
 CREATE INDEX idx_montant_type ON montant(transaction_type_id);
@@ -165,3 +188,27 @@ VALUES (2, 3, 30000, 300, 29700, 'TXN-YAS-TO-AIR-002', 'En attente');
 -- Transaction échouée
 INSERT INTO transactions (client_id, transaction_type_id, montant, frais_applique, montant_net, reference, status) 
 VALUES (8, 2, 50000, 400, 49600, 'TXN-ORA-WTH-003', 'Echoue');
+
+-- Commission YAS → ORANGE (10%)
+INSERT INTO commission (operateur_source_id, operateur_destinataire_id, pourcentage, description) 
+VALUES (1, 2, 10.00, 'Commission YAS vers ORANGE');
+
+-- Commission YAS → AIRTEL (10%)
+INSERT INTO commission (operateur_source_id, operateur_destinataire_id, pourcentage, description) 
+VALUES (1, 3, 10.00, 'Commission YAS vers AIRTEL');
+
+-- Commission ORANGE → YAS (10%)
+INSERT INTO commission (operateur_source_id, operateur_destinataire_id, pourcentage, description) 
+VALUES (2, 1, 10.00, 'Commission ORANGE vers YAS');
+
+-- Commission ORANGE → AIRTEL (10%)
+INSERT INTO commission (operateur_source_id, operateur_destinataire_id, pourcentage, description) 
+VALUES (2, 3, 10.00, 'Commission ORANGE vers AIRTEL');
+
+-- Commission AIRTEL → YAS (10%)
+INSERT INTO commission (operateur_source_id, operateur_destinataire_id, pourcentage, description) 
+VALUES (3, 1, 10.00, 'Commission AIRTEL vers YAS');
+
+-- Commission AIRTEL → ORANGE (10%)
+INSERT INTO commission (operateur_source_id, operateur_destinataire_id, pourcentage, description) 
+VALUES (3, 2, 10.00, 'Commission AIRTEL vers ORANGE');

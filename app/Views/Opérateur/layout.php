@@ -86,6 +86,7 @@ $activeLinks = [
                 <a class="nav-link <?= $activeLinks['types'] ? 'active' : '' ?>" href="<?= base_url('operateur/types') ?>"><i class="bi bi-list-check"></i> Types & barèmes</a>
                 <a class="nav-link <?= $activeLinks['gains'] ? 'active' : '' ?>" href="<?= base_url('operateur/gains') ?>"><i class="bi bi-graph-up-arrow"></i> Gains</a>
                 <a class="nav-link <?= $activeLinks['comptes'] ? 'active' : '' ?>" href="<?= base_url('operateur/comptes') ?>"><i class="bi bi-wallet2"></i> Comptes clients</a>
+                <a class="nav-link <?= $section === 'commissions' ? 'active' : '' ?>" href="<?= base_url('operateur/commissions') ?>"><i class="bi bi-percent"></i> Commissions</a>
                 <a class="nav-link <?= $activeLinks['client'] ? 'active' : '' ?>" href="<?= base_url('operateur/client/ajouter') ?>"><i class="bi bi-person-plus"></i> Ajouter client</a>
             </nav>
         </aside>

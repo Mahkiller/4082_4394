@@ -29,6 +29,10 @@ $routes->group('operateur', function ($routes) {
     $routes->get('client/modifier/(:num)', 'OperateurController::clientModifier/$1');
     $routes->post('client/update/(:num)', 'OperateurController::clientUpdate/$1');
     $routes->get('client/supprimer/(:num)', 'OperateurController::clientSupprimer/$1');
+    $routes->get('commissions', 'OperateurController::commissions');
+    $routes->post('commission/ajouter', 'OperateurController::commissionAjouter');
+    $routes->post('commission/modifier/(:num)', 'OperateurController::commissionModifier/$1');
+    $routes->get('commission/supprimer/(:num)', 'OperateurController::commissionSupprimer/$1');
 });
 //Authentification
 $routes->get('/login', 'Client::login');

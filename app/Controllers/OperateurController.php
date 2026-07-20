@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\ClientModel;
+use App\Models\CommissionModel;
 use App\Models\MontantModel;
 use App\Models\OperateurModel;
 use App\Models\OperateurPrefixeModel;
@@ -17,6 +18,7 @@ class OperateurController extends BaseController
     protected MontantModel $montantModel;
     protected ClientModel $clientModel;
     protected TransactionModel $transactionModel;
+    protected CommissionModel $commissionModel;
 
     public function initController(
         \CodeIgniter\HTTP\RequestInterface $request,
@@ -31,6 +33,7 @@ class OperateurController extends BaseController
         $this->montantModel      = new MontantModel();
         $this->clientModel       = new ClientModel();
         $this->transactionModel  = new TransactionModel();
+        $this->commissionModel   = new CommissionModel();
 
         helper(['form', 'url']);
     }
@@ -481,5 +484,68 @@ class OperateurController extends BaseController
         $this->clientModel->delete($id, true);
 
         return redirect()->to('/operateur/comptes')->with('success', "Client {$client->numero} supprimé.");
+    }
+
+    public function commissions()
+    {
+        $commissions = $this->commissionModel->findAll();
+        $operateurs = $this->operateurModel->findAll();
+
+        foreach ($commissions as $com) {
+            $com->sourceNom = $this->operateurModel->find($com->operateur_source_id)->nom ?? '?';
+            $com->destNom = $this->operateurModel->find($com->operateur_destinataire_id)->nom ?? '?';
+        }
+
+        return view('Opérateur/commissions', [
+            'operateur' => $this->currentOperateur(),
+            'commissions' => $commissions,
+            'operateurs' => $operateurs,
+        ]);
+    }
+
+    public function commissionAjouter()
+    {
+        $source = (int) $this->request->getPost('operateur_source_id');
+        $dest = (int) $this->request->getPost('operateur_destinataire_id');
+        $pct = (float) $this->request->getPost('pourcentage');
+        $desc = trim($this->request->getPost('description') ?? '');
+
+        if ($source === $dest) {
+            return redirect()->back()->with('error', 'Les opérateurs source et destinataire doivent être différents.');
+        }
+
+        $this->commissionModel->insert([
+            'operateur_source_id' => $source,
+            'operateur_destinataire_id' => $dest,
+            'pourcentage' => $pct,
+            'description' => $desc,
+            'est_actif' => 1,
+        ]);
+
+        return redirect()->to('/operateur/commissions')->with('success', 'Commission ajoutée.');
+    }
+
+    public function commissionModifier($id = null)
+    {
+        $com = $this->commissionModel->find($id);
+        if (! $com) {
+            return redirect()->to('/operateur/commissions')->with('error', 'Commission introuvable.');
+        }
+
+        $pct = (float) $this->request->getPost('pourcentage');
+        $desc = trim($this->request->getPost('description') ?? '');
+
+        $this->commissionModel->update($id, [
+            'pourcentage' => $pct,
+            'description' => $desc,
+        ]);
+
+        return redirect()->to('/operateur/commissions')->with('success', 'Commission modifiée.');
+    }
+
+    public function commissionSupprimer($id = null)
+    {
+        $this->commissionModel->delete($id, true);
+        return redirect()->to('/operateur/commissions')->with('success', 'Commission supprimée.');
     }
 }

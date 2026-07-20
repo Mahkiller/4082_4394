@@ -67,8 +67,8 @@ class Transaction extends BaseController
 
     public function faireTransfert()
     {
-        $montant = $this->request->getPost('montant');
-        $destinataire = $this->request->getPost('destinataire');
+        $montant = (float) $this->request->getPost('montant');
+        $destinataire = trim($this->request->getPost('destinataire') ?? '');
         $db = \Config\Database::connect();
         $clientId = session()->get('user_id');
         $typeTransaction = 3;
@@ -81,14 +81,18 @@ class Transaction extends BaseController
             ->get()
             ->getRow();
 
-        $fraisTransaction = $row ? $row->frais_montant : 0;
+        $fraisTransaction = $row ? (float) $row->frais_montant : 0;
 
-        // Vérifier le solde suffisant (montant + frais)
-        if ($montant + $fraisTransaction > session()->get('user_solde')) {
-            return redirect()->to('/transfert')->with('error', 'Solde insuffisant pour effectuer ce transfert.');
-        }
+        // Récupérer l'émetteur et son opérateur
+        $emetteur = $db->table('clients')->where('id', $clientId)->get()->getRow();
+        $sourcePrefixe = substr($emetteur->numero, 0, 3);
+        $sourceOpRow = $db->table('operateur_prefixe')
+            ->where('prefixe', $sourcePrefixe)
+            ->get()
+            ->getRow();
+        $sourceOpId = $sourceOpRow ? (int) $sourceOpRow->operateur_id : null;
 
-        // Récupérer le destinataire
+        // Récupérer le destinataire et son opérateur
         $destinataireRow = $db->table('clients')
             ->where('numero', $destinataire)
             ->get()
@@ -102,7 +106,35 @@ class Transaction extends BaseController
             return redirect()->to('/transfert')->with('error', 'Vous ne pouvez pas vous transférer de l\'argent à vous-même.');
         }
 
-        $nouveauSoldeEmetteur = session()->get('user_solde') - $montant - $fraisTransaction;
+        $destPrefixe = substr($destinataireRow->numero, 0, 3);
+        $destOpRow = $db->table('operateur_prefixe')
+            ->where('prefixe', $destPrefixe)
+            ->get()
+            ->getRow();
+        $destOpId = $destOpRow ? (int) $destOpRow->operateur_id : null;
+
+        // Calcul commission inter-opérateur
+        $commission = 0.0;
+        if ($sourceOpId && $destOpId && $sourceOpId != $destOpId) {
+            $com = $db->table('commission')
+                ->where('operateur_source_id', $sourceOpId)
+                ->where('operateur_destinataire_id', $destOpId)
+                ->where('est_actif', 1)
+                ->get()
+                ->getRow();
+            if ($com) {
+                $commission = (float) $com->pourcentage / 100 * $fraisTransaction;
+            }
+        }
+
+        $totalDebit = $montant + $fraisTransaction + $commission;
+
+        // Vérifier le solde suffisant
+        if ($totalDebit > session()->get('user_solde')) {
+            return redirect()->to('/transfert')->with('error', 'Solde insuffisant pour effectuer ce transfert.');
+        }
+
+        $nouveauSoldeEmetteur = session()->get('user_solde') - $totalDebit;
         $nouveauSoldeDestinataire = $destinataireRow->solde + $montant;
 
         // Générer une référence unique
@@ -111,13 +143,13 @@ class Transaction extends BaseController
         // Démarrer une transaction
         $db->transStart();
 
-        // MAJ solde émetteur dans la session et la base
+        // MAJ solde émetteur
         session()->set('user_solde', $nouveauSoldeEmetteur);
         $db->table('clients')
             ->where('id', $clientId)
             ->update(['solde' => $nouveauSoldeEmetteur]);
 
-        // MAJ solde destinataire dans la base
+        // MAJ solde destinataire
         $db->table('clients')
             ->where('id', $destinataireRow->id)
             ->update(['solde' => $nouveauSoldeDestinataire]);
@@ -129,6 +161,7 @@ class Transaction extends BaseController
             'montant' => $montant,
             'frais_applique' => $fraisTransaction,
             'montant_net' => $montant,
+            'commission' => $commission,
             'reference' => $reference,
             'status' => 'Reussi',
         ]);
