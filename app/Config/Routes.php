@@ -28,4 +28,5 @@ $routes->group('operateur', function ($routes) {
     $routes->post('client/store', 'OperateurController::clientStore');
     $routes->get('client/modifier/(:num)', 'OperateurController::clientModifier/$1');
     $routes->post('client/update/(:num)', 'OperateurController::clientUpdate/$1');
+    $routes->get('client/supprimer/(:num)', 'OperateurController::clientSupprimer/$1');
 });

@@ -111,6 +111,18 @@ class OperateurController extends BaseController
         return $builder;
     }
 
+    private function operateurDuClient(string $numero): string
+    {
+        $prefixe = substr($numero, 0, 3);
+        $op = $this->prefixeModel->builder()
+            ->select('operateur.nom')
+            ->join('operateur', 'operateur.id = operateur_prefixe.operateur_id', 'left')
+            ->where('operateur_prefixe.prefixe', $prefixe)
+            ->get()
+            ->getRow();
+        return $op->nom ?? 'Inconnu';
+    }
+
     public function index()
     {
         $operateur = $this->currentOperateur();
@@ -365,6 +377,7 @@ class OperateurController extends BaseController
                 ->where('client_id', $client->id);
             $this->applyOperateurFiltre($nb);
             $client->nbTransac = $nb->countAllResults();
+            $client->operateurNom = $this->operateurDuClient($client->numero);
             $totalSolde += (float) $client->solde;
         }
 
@@ -456,5 +469,17 @@ class OperateurController extends BaseController
         ]);
 
         return redirect()->to('/operateur/comptes')->with('success', "Client $numero mis à jour.");
+    }
+
+    public function clientSupprimer($id = null)
+    {
+        $client = $this->clientModel->find($id);
+        if (! $client) {
+            return redirect()->to('/operateur/comptes')->with('error', 'Client introuvable.');
+        }
+
+        $this->clientModel->delete($id, true);
+
+        return redirect()->to('/operateur/comptes')->with('success', "Client {$client->numero} supprimé.");
     }
 }
