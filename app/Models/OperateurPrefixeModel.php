@@ -13,4 +13,13 @@ class OperateurPrefixeModel extends Model
     protected $useSoftDeletes   = false;
     protected $allowedFields    = ['operateur_id', 'prefixe'];
     protected $useTimestamps    = false;
+
+    public function getOperateurFromPrefixe(string $prefixe)
+    {
+        return $this->builder()
+            ->select('operateur.nom')
+            ->join('operateur', 'operateur.id = operateur_prefixe.operateur_id', 'left')
+            ->where('operateur_prefixe.prefixe', $prefixe)
+            ->get()->getRow();
+    }
 }

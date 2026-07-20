@@ -38,125 +38,39 @@ class OperateurController extends BaseController
         helper(['form', 'url']);
     }
 
-    private function selectedOperateurId(): ?int
-    {
-        $id = session('operateur_id');
-        if ($id === null || $id === 'all' || $id === '') {
-            return null;
-        }
-        return (int) $id;
-    }
-
-    private function currentOperateur()
-    {
-        $id = $this->selectedOperateurId();
-        if ($id === null) {
-            return (object) ['id' => null, 'nom' => 'Tous les opérateurs'];
-        }
-
-        $operateur = $this->operateurModel->find($id);
-        if (! $operateur) {
-            return (object) ['id' => null, 'nom' => 'Tous les opérateurs'];
-        }
-        return $operateur;
-    }
-
-    private function concretOperateur(): object
-    {
-        $id = $this->selectedOperateurId();
-        if ($id !== null) {
-            $op = $this->operateurModel->find($id);
-            if ($op) {
-                return $op;
-            }
-        }
-        $op = $this->operateurModel->first();
-        if (! $op) {
-            $newId = $this->operateurModel->insert(['nom' => 'YAS']);
-            $op = $this->operateurModel->find($newId);
-        }
-        return $op;
-    }
-
-    private function prefixesFiltre(): array
-    {
-        $id = $this->selectedOperateurId();
-        if ($id === null) {
-            return [];
-        }
-        $rows = $this->operateurModel->getPrefixes($id);
-        return array_map(fn($p) => $p->prefixe, $rows);
-    }
-
-    public function selectionner()
-    {
-        $id = $this->request->getPost('operateur_id') ?? $this->request->getGet('operateur_id');
-        if ($id === 'all' || $id === '' || $id === null) {
-            session()->remove('operateur_id');
-        } else {
-            session()->set('operateur_id', (int) $id);
-        }
-
-        $redirect = $this->request->getPost('redirect') ?? $this->request->getGet('redirect') ?? '/operateur';
-        return redirect()->to($redirect);
-    }
-
-    private function applyOperateurFiltre($builder)
-    {
-        $prefixes = $this->prefixesFiltre();
-        if (! empty($prefixes)) {
-            $builder->groupStart();
-            foreach ($prefixes as $p) {
-                $builder->orLike('clients.numero', $p, 'after');
-            }
-            $builder->groupEnd();
-        }
-        return $builder;
-    }
-
-    private function operateurDuClient(string $numero): string
-    {
-        $prefixe = substr($numero, 0, 3);
-        $op = $this->prefixeModel->builder()
-            ->select('operateur.nom')
-            ->join('operateur', 'operateur.id = operateur_prefixe.operateur_id', 'left')
-            ->where('operateur_prefixe.prefixe', $prefixe)
-            ->get()
-            ->getRow();
-        return $op->nom ?? 'Inconnu';
-    }
-
     public function index()
     {
-        $operateur = $this->currentOperateur();
-        $filtre = $this->prefixesFiltre();
-
-        $builder = $this->transactionModel->builder()
+        $dernieres = $this->transactionModel->builder()
             ->select('transactions.*, transaction_type.label AS type_label, clients.numero AS client_numero')
             ->join('transaction_type', 'transaction_type.id = transactions.transaction_type_id', 'left')
             ->join('clients', 'clients.id = transactions.client_id', 'left')
+            ->join('operateur_prefixe', "SUBSTR(clients.numero, 1, 3) = operateur_prefixe.prefixe", 'left')
+            ->join('operateur', 'operateur.id = operateur_prefixe.operateur_id', 'left')
+            ->where('operateur.nom', 'YAS')
             ->orderBy('transactions.created_at', 'DESC')
-            ->limit(5);
-        $this->applyOperateurFiltre($builder);
-        $dernieres = $builder->get()->getResult();
+            ->limit(5)
+            ->get()->getResult();
 
         $types = [];
         foreach ($this->typeModel->findAll() as $t) {
             $types[$t->id] = $t;
         }
 
-        $nbClients = $this->clientModel->builder();
-        $this->applyOperateurFiltre($nbClients);
-        $nbClients = $nbClients->countAllResults();
+        $nbClients = $this->clientModel->builder()
+            ->join('operateur_prefixe', "SUBSTR(clients.numero, 1, 3) = operateur_prefixe.prefixe", 'left')
+            ->join('operateur', 'operateur.id = operateur_prefixe.operateur_id', 'left')
+            ->where('operateur.nom', 'YAS')
+            ->countAllResults();
 
         $nbTransac = $this->transactionModel->builder()
-            ->join('clients', 'clients.id = transactions.client_id', 'left');
-        $this->applyOperateurFiltre($nbTransac);
-        $nbTransac = $nbTransac->countAllResults();
+            ->join('clients', 'clients.id = transactions.client_id', 'left')
+            ->join('operateur_prefixe', "SUBSTR(clients.numero, 1, 3) = operateur_prefixe.prefixe", 'left')
+            ->join('operateur', 'operateur.id = operateur_prefixe.operateur_id', 'left')
+            ->where('operateur.nom', 'YAS')
+            ->countAllResults();
 
         $data = [
-            'operateur'  => $operateur,
-            'nbPrefixes' => $operateur->id ? $this->prefixeModel->where('operateur_id', $operateur->id)->countAllResults() : $this->prefixeModel->countAllResults(),
+            'nbPrefixes' => $this->prefixeModel->countAllResults(), // Pourrait être filtré sur YAS si besoin
             'nbTypes'    => $this->typeModel->countAllResults(),
             'nbClients'  => $nbClients,
             'nbTransac'  => $nbTransac,
@@ -172,10 +86,12 @@ class OperateurController extends BaseController
     private function totalGains(): float
     {
         $builder = $this->transactionModel->builder()
-            ->join('clients', 'clients.id = transactions.client_id', 'left');
-        $this->applyOperateurFiltre($builder);
-        $builder->selectSum('frais_applique', 'total')
+            ->join('clients', 'clients.id = transactions.client_id', 'left')
+            ->join('operateur_prefixe', "SUBSTR(clients.numero, 1, 3) = operateur_prefixe.prefixe", 'left')
+            ->join('operateur', 'operateur.id = operateur_prefixe.operateur_id', 'left')
+            ->selectSum('frais_applique', 'total')
             ->where('status', 'Reussi')
+            ->where('operateur.nom', 'YAS')
             ->whereIn('transactions.transaction_type_id', [2, 3]);
         $row = $builder->get()->getRow();
         return (float) ($row->total ?? 0);
@@ -183,11 +99,11 @@ class OperateurController extends BaseController
 
     public function prefixe()
     {
-        $operateur = $this->currentOperateur();
-        $prefixes  = $this->operateurModel->getPrefixes($operateur->id);
+        $yas = $this->operateurModel->where('nom', 'YAS')->first();
+        $prefixes  = $yas ? $this->operateurModel->getPrefixes($yas->id) : [];
 
         return view('Opérateur/prefixe', [
-            'operateur'  => $operateur,
+            // 'operateur' n'est plus nécessaire ici
             'prefixes'   => $prefixes,
             'operateurs' => $this->operateurModel->findAll(),
         ]);
@@ -195,7 +111,11 @@ class OperateurController extends BaseController
 
     public function prefixeAjouter()
     {
-        $operateur = $this->concretOperateur();
+        $operateur = $this->operateurModel->where('nom', 'YAS')->first();
+        if (!$operateur) {
+            return redirect()->back()->with('error', 'Opérateur YAS introuvable.');
+        }
+
         $prefixe   = trim($this->request->getPost('prefixe') ?? '');
 
         if ($prefixe === '') {
@@ -229,7 +149,6 @@ class OperateurController extends BaseController
         }
 
         return view('Opérateur/types', [
-            'operateur' => $this->currentOperateur(),
             'types'     => $types,
             'operateurs' => $this->operateurModel->findAll(),
         ]);
@@ -270,7 +189,6 @@ class OperateurController extends BaseController
         $tranches = $this->montantModel->getByType($type->id);
 
         return view('Opérateur/montants', [
-            'operateur' => $this->currentOperateur(),
             'type'      => $type,
             'tranches'  => $tranches,
             'operateurs' => $this->operateurModel->findAll(),
@@ -342,11 +260,13 @@ class OperateurController extends BaseController
 
         foreach ($types as $type) {
             $builder = $this->transactionModel->builder()
-                ->join('clients', 'clients.id = transactions.client_id', 'left');
-            $this->applyOperateurFiltre($builder);
+                ->join('clients', 'clients.id = transactions.client_id', 'left')
+                ->join('operateur_prefixe', "SUBSTR(clients.numero, 1, 3) = operateur_prefixe.prefixe", 'left')
+                ->join('operateur', 'operateur.id = operateur_prefixe.operateur_id', 'left');
             $builder->selectSum('frais_applique', 'total')
                 ->selectSum('montant', 'volume')
                 ->where('transactions.transaction_type_id', $type->id)
+                ->where('operateur.nom', 'YAS')
                 ->where('status', 'Reussi');
             $row = $builder->get()->getRow();
             $gain = (float) ($row->total ?? 0);
@@ -360,7 +280,6 @@ class OperateurController extends BaseController
         }
 
         return view('Opérateur/gains', [
-            'operateur' => $this->currentOperateur(),
             'details'   => $details,
             'total'     => $total,
             'operateurs' => $this->operateurModel->findAll(),
@@ -369,36 +288,38 @@ class OperateurController extends BaseController
 
     public function comptes()
     {
-        $builder = $this->clientModel->builder();
-        $this->applyOperateurFiltre($builder);
-        $clients = $builder->orderBy('numero', 'ASC')->get()->getResult();
+        $clients = $this->clientModel
+            ->select('clients.*, operateur.nom as operateurNom, COUNT(transactions.id) as nbTransac')
+            ->join('operateur_prefixe', 'SUBSTR(clients.numero, 1, 3) = operateur_prefixe.prefixe', 'left')
+            ->join('operateur', 'operateur.id = operateur_prefixe.operateur_id', 'left')
+            ->join('transactions', 'transactions.client_id = clients.id', 'left')
+            ->where('operateur.nom', 'YAS')
+            ->groupBy('clients.id, operateur.nom')
+            ->orderBy('clients.numero', 'ASC')
+            ->findAll();
 
-        $totalSolde = 0;
-        foreach ($clients as $client) {
-            $nb = $this->transactionModel->builder()
-                ->join('clients', 'clients.id = transactions.client_id', 'left')
-                ->where('client_id', $client->id);
-            $this->applyOperateurFiltre($nb);
-            $client->nbTransac = $nb->countAllResults();
-            $client->operateurNom = $this->operateurDuClient($client->numero);
-            $totalSolde += (float) $client->solde;
-        }
+        $totalSolde = array_sum(array_column($clients, 'solde'));
 
         return view('Opérateur/comptes', [
-            'operateur'  => $this->currentOperateur(),
             'clients'    => $clients,
             'totalSolde' => $totalSolde,
             'operateurs' => $this->operateurModel->findAll(),
         ]);
     }
 
+    private function operateurDuClient(string $numero): string
+    {
+        $prefixe = substr($numero, 0, 3);
+        $op = $this->prefixeModel->getOperateurFromPrefixe($prefixe);
+        return $op->nom ?? 'Inconnu';
+    }
+
     public function clientAjouter()
     {
-        $operateur = $this->currentOperateur();
-        $prefixes  = $this->operateurModel->getPrefixes($operateur->id);
+        $yas = $this->operateurModel->where('nom', 'YAS')->first();
+        $prefixes  = $yas ? $this->operateurModel->getPrefixes($yas->id) : [];
 
         return view('Opérateur/client_ajouter', [
-            'operateur' => $operateur,
             'prefixes'  => $prefixes,
             'operateurs' => $this->operateurModel->findAll(),
         ]);
@@ -437,7 +358,6 @@ class OperateurController extends BaseController
         }
 
         return view('Opérateur/client_modifier', [
-            'operateur' => $this->currentOperateur(),
             'client'    => $client,
             'operateurs' => $this->operateurModel->findAll(),
         ]);
@@ -486,6 +406,27 @@ class OperateurController extends BaseController
         return redirect()->to('/operateur/comptes')->with('success', "Client {$client->numero} supprimé.");
     }
 
+    public function clientDetail($id = null)
+    {
+        $client = $this->clientModel->find($id);
+        if (! $client) {
+            return redirect()->to('/operateur/comptes')->with('error', 'Client introuvable.');
+        }
+
+        $transactions = $this->transactionModel->builder()
+            ->select('transactions.*, transaction_type.label, transaction_type.code')
+            ->join('transaction_type', 'transaction_type.id = transactions.transaction_type_id', 'left')
+            ->where('transactions.client_id', $id)
+            ->orderBy('transactions.created_at', 'DESC')
+            ->get()
+            ->getResult();
+
+        return view('Opérateur/client_detail', [
+            'client' => $client,
+            'transactions' => $transactions,
+        ]);
+    }
+
     public function commissions()
     {
         $commissions = $this->commissionModel->findAll();
@@ -497,7 +438,6 @@ class OperateurController extends BaseController
         }
 
         return view('Opérateur/commissions', [
-            'operateur' => $this->currentOperateur(),
             'commissions' => $commissions,
             'operateurs' => $operateurs,
         ]);
@@ -505,7 +445,7 @@ class OperateurController extends BaseController
 
     public function commissionAjouter()
     {
-        $source = (int) $this->request->getPost('operateur_source_id');
+        $source = 1; // YAS uniquement
         $dest = (int) $this->request->getPost('operateur_destinataire_id');
         $pct = (float) $this->request->getPost('pourcentage');
         $desc = trim($this->request->getPost('description') ?? '');

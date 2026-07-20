@@ -61,6 +61,12 @@ $activeLinks = [
         .card-header { background: #fff; border-bottom: 1px solid #eef2f7; font-weight: 600; }
         .table thead th { background: #f8fafc; color: #475569; font-weight: 600; border-bottom-width: 1px; }
         .badge-prefix { background: #e0e7ff; color: #4338ca; font-weight: 600; }
+        .btn-action { min-width: 36px; font-weight: 600; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: .875rem; }
+        .btn-edit { background: #4f46e5; border-color: #4f46e5; color: #fff; }
+        .btn-edit:hover { background: #4338ca; border-color: #4338ca; color: #fff; }
+        .btn-delete { background: #ef4444; border-color: #ef4444; color: #fff; }
+        .btn-delete:hover { background: #dc2626; border-color: #dc2626; color: #fff; }
+        .btn-sm-action { padding: 4px 10px; font-size: .8rem; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px; }
     </style>
 </head>
 <body>
@@ -68,18 +74,9 @@ $activeLinks = [
     <div class="row">
         <aside class="col-lg-2 sidebar p-3">
             <div class="brand mb-3"><i class="bi bi-phone"></i> MobileMoney</div>
-            <form method="get" action="<?= base_url('operateur/selectionner') ?>" class="mb-4">
-                <label class="text-white-50 small d-block mb-1">Opérateur</label>
-                <div class="input-group input-group-sm">
-                    <select name="operateur_id" class="form-select" onchange="this.form.submit()">
-                        <option value="all" <?= (session('operateur_id') ? '' : 'selected') ?>>Tous les opérateurs</option>
-                        <?php foreach (($operateurs ?? []) as $op): ?>
-                            <option value="<?= $op->id ?>" <?= (session('operateur_id') == $op->id ? 'selected' : '') ?>><?= esc($op->nom) ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <input type="hidden" name="redirect" value="<?= '/' . esc(uri_string()) ?>">
-            </form>
+            <div class="mb-4 text-center">
+                <div class="badge bg-light text-dark fs-6">Opérateur YAS</div>
+            </div>
             <nav class="nav flex-column">
                 <a class="nav-link <?= $activeLinks[''] ? 'active' : '' ?>" href="<?= base_url('operateur') ?>"><i class="bi bi-grid-1x2"></i> Tableau de bord</a>
                 <a class="nav-link <?= $activeLinks['prefixe'] ? 'active' : '' ?>" href="<?= base_url('operateur/prefixe') ?>"><i class="bi bi-signpost"></i> Préfixes</a>
@@ -88,6 +85,7 @@ $activeLinks = [
                 <a class="nav-link <?= $activeLinks['comptes'] ? 'active' : '' ?>" href="<?= base_url('operateur/comptes') ?>"><i class="bi bi-wallet2"></i> Comptes clients</a>
                 <a class="nav-link <?= $section === 'commissions' ? 'active' : '' ?>" href="<?= base_url('operateur/commissions') ?>"><i class="bi bi-percent"></i> Commissions</a>
                 <a class="nav-link <?= $activeLinks['client'] ? 'active' : '' ?>" href="<?= base_url('operateur/client/ajouter') ?>"><i class="bi bi-person-plus"></i> Ajouter client</a>
+                <a class="nav-link" href="<?= base_url('login') ?>" style="color:#fbbf24;"><i class="bi bi-phone"></i> Mode client</a>
             </nav>
         </aside>
         <main class="col-lg-10 content-wrap">

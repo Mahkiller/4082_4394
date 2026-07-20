@@ -5,7 +5,7 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/', 'Home::index');
+$routes->get('/', 'OperateurController::index');
 
 // Espace Opérateur (Version 1)
 $routes->group('operateur', function ($routes) {
@@ -29,6 +29,7 @@ $routes->group('operateur', function ($routes) {
     $routes->get('client/modifier/(:num)', 'OperateurController::clientModifier/$1');
     $routes->post('client/update/(:num)', 'OperateurController::clientUpdate/$1');
     $routes->get('client/supprimer/(:num)', 'OperateurController::clientSupprimer/$1');
+    $routes->get('client/detail/(:num)', 'OperateurController::clientDetail/$1');
     $routes->get('commissions', 'OperateurController::commissions');
     $routes->post('commission/ajouter', 'OperateurController::commissionAjouter');
     $routes->post('commission/modifier/(:num)', 'OperateurController::commissionModifier/$1');

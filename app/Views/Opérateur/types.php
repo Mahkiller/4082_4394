@@ -29,8 +29,8 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <span><strong><?= esc($type->label) ?></strong> <span class="badge bg-secondary"><?= esc($type->code) ?></span></span>
             <div>
-                <a href="<?= base_url('operateur/montants/' . $type->id) ?>" class="btn btn-sm btn-outline-primary"><i class="bi bi-sliders"></i> Barèmes</a>
-                <a href="<?= base_url('operateur/type/supprimer/' . $type->id) ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Supprimer ce type et ses barèmes ?')"><i class="bi bi-trash"></i></a>
+                <a href="<?= base_url('operateur/montants/' . $type->id) ?>" class="btn btn-sm btn-action btn-edit"><i class="bi bi-sliders"></i> <span class="d-none d-sm-inline">Barèmes</span></a>
+                <a href="<?= base_url('operateur/type/supprimer/' . $type->id) ?>" class="btn btn-sm btn-action btn-delete ms-1" onclick="return confirm('Supprimer ce type et ses barêmes ?')"><i class="bi bi-trash"></i> <span class="d-none d-sm-inline">Supprimer</span></a>
             </div>
         </div>
         <div class="card-body p-0">

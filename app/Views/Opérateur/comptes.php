@@ -30,13 +30,13 @@
                         <?php foreach ($clients as $c): ?>
                             <tr>
                                 <td><?= $c->id ?></td>
-                                <td><code><?= esc($c->numero) ?></code></td>
+                                <td><a href="<?= base_url('operateur/client/detail/' . $c->id) ?>"><code><?= esc($c->numero) ?></code></a></td>
                                 <td><span class="badge badge-prefix"><?= esc($c->operateurNom ?? 'Inconnu') ?></span></td>
                                 <td class="text-end"><?= number_format($c->solde, 0, ',', ' ') ?></td>
                                 <td class="text-end"><span class="badge bg-light text-dark"><?= $c->nbTransac ?></span></td>
                                 <td class="text-end">
-                                    <a href="<?= base_url('operateur/client/modifier/' . $c->id) ?>" class="btn btn-sm btn-outline-primary" title="Modifier"><i class="bi bi-pencil"></i></a>
-                                    <a href="<?= base_url('operateur/client/supprimer/' . $c->id) ?>" class="btn btn-sm btn-outline-danger" title="Supprimer" onclick="return confirm('Supprimer le client <?= esc($c->numero) ?> ?')"><i class="bi bi-trash"></i></a>
+                                    <a href="<?= base_url('operateur/client/modifier/' . $c->id) ?>" class="btn btn-sm btn-action btn-edit" title="Modifier"><i class="bi bi-pencil"></i> <span class="d-none d-sm-inline">Modifier</span></a>
+                                    <a href="<?= base_url('operateur/client/supprimer/' . $c->id) ?>" class="btn btn-sm btn-action btn-delete ms-1" onclick="return confirm('Supprimer le client <?= esc($c->numero) ?> ?')" title="Supprimer"><i class="bi bi-trash"></i> <span class="d-none d-sm-inline">Supprimer</span></a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

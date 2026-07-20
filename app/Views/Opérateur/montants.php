@@ -48,8 +48,8 @@
                                     <td><input type="number" step="0.01" name="max_montant" class="form-control form-control-sm" value="<?= $tr->max_montant ?>" required></td>
                                     <td class="text-end"><input type="number" step="0.01" name="frais_montant" class="form-control form-control-sm text-end" value="<?= $tr->frais_montant ?>" required></td>
                                     <td class="text-end">
-                                        <button class="btn btn-sm btn-success" type="submit" title="Enregistrer"><i class="bi bi-check-lg"></i></button>
-                                        <a href="<?= base_url('operateur/montant/supprimer/' . $tr->id) ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Supprimer ?')"><i class="bi bi-trash"></i></a>
+                                        <button class="btn btn-sm btn-action btn-edit" type="submit" title="Enregistrer"><i class="bi bi-check-lg"></i> <span class="d-none d-sm-inline">OK</span></button>
+                                        <a href="<?= base_url('operateur/montant/supprimer/' . $tr->id) ?>" class="btn btn-sm btn-action btn-delete ms-1" onclick="return confirm('Supprimer ?')" title="Supprimer"><i class="bi bi-trash"></i></a>
                                     </td>
                                 </form>
                             </tr>

@@ -3,7 +3,7 @@
 <?= $this->section('title') ?>Commissions<?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-<p class="text-muted">Configuration des commissions inter-opérateurs pour les transferts (par défaut : 10 % des frais).</p>
+<p class="text-muted">Configuration des commissions inter-opérateurs pour les transferts (% du montant transféré).</p>
 
 <div class="row mb-3">
     <div class="col-lg-5">
@@ -11,19 +11,18 @@
             <div class="card-header">Ajouter une commission</div>
             <div class="card-body">
                 <form method="post" action="<?= base_url('operateur/commission/ajouter') ?>">
+                    <input type="hidden" name="operateur_source_id" value="1">
                     <div class="mb-2">
                         <label class="form-label">Opérateur source</label>
-                        <select name="operateur_source_id" class="form-select" required>
-                            <?php foreach ($operateurs as $op): ?>
-                                <option value="<?= $op->id ?>"><?= esc($op->nom) ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <input type="text" class="form-control" value="YAS" disabled>
                     </div>
                     <div class="mb-2">
                         <label class="form-label">Opérateur destinataire</label>
                         <select name="operateur_destinataire_id" class="form-select" required>
                             <?php foreach ($operateurs as $op): ?>
-                                <option value="<?= $op->id ?>"><?= esc($op->nom) ?></option>
+                                <?php if ($op->nom !== 'YAS'): ?>
+                                    <option value="<?= $op->id ?>"><?= esc($op->nom) ?></option>
+                                <?php endif; ?>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -66,8 +65,8 @@
                                         <td class="text-end"><?= number_format($com->pourcentage, 2) ?> %</td>
                                         <td><?= esc($com->description) ?></td>
                                         <td class="text-end">
-                                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editModal<?= $com->id ?>"><i class="bi bi-pencil"></i></button>
-                                            <a href="<?= base_url('operateur/commission/supprimer/' . $com->id) ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Supprimer ?')"><i class="bi bi-trash"></i></a>
+                                            <button class="btn btn-sm btn-action btn-edit" data-bs-toggle="modal" data-bs-target="#editModal<?= $com->id ?>" title="Modifier"><i class="bi bi-pencil"></i> <span class="d-none d-sm-inline">Modifier</span></button>
+                                            <a href="<?= base_url('operateur/commission/supprimer/' . $com->id) ?>" class="btn btn-sm btn-action btn-delete ms-1" onclick="return confirm('Supprimer cette commission ?')" title="Supprimer"><i class="bi bi-trash"></i> <span class="d-none d-sm-inline">Supprimer</span></a>
                                         </td>
                                     </tr>
                                     <!-- Modal édition -->

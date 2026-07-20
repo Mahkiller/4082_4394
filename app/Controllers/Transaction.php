@@ -123,7 +123,7 @@ class Transaction extends BaseController
                 ->get()
                 ->getRow();
             if ($com) {
-                $commission = (float) $com->pourcentage / 100 * $fraisTransaction;
+                $commission = (float) $com->pourcentage / 100 * $montant;
             }
         }
 
@@ -162,6 +162,7 @@ class Transaction extends BaseController
             'frais_applique' => $fraisTransaction,
             'montant_net' => $montant,
             'commission' => $commission,
+            'destinataire_numero' => $destinataire,
             'reference' => $reference,
             'status' => 'Reussi',
         ]);

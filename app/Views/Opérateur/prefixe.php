@@ -30,7 +30,7 @@
                         <?php foreach ($prefixes as $p): ?>
                             <span class="badge bg-primary fs-6 d-flex align-items-center">
                                 <?= esc($p->prefixe) ?>
-                                <a href="<?= base_url('operateur/prefixe/supprimer/' . $p->id) ?>" class="ms-2 text-white" onclick="return confirm('Supprimer ce préfixe ?')"><i class="bi bi-x-circle"></i></a>
+                                <a href="<?= base_url('operateur/prefixe/supprimer/' . $p->id) ?>" class="ms-2 text-white btn-sm-action" onclick="return confirm('Supprimer ce préfixe ?')"><i class="bi bi-x-circle"></i></a>
                             </span>
                         <?php endforeach; ?>
                     </div>
