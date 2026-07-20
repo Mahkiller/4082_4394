@@ -29,7 +29,15 @@ class Client extends BaseController
         $db = \Config\Database::connect();
         $clientId = session()->get('user_id');
 
+        if (! $clientId) {
+            return redirect()->to('/login');
+        }
+
         $client = $db->table('clients')->where('id', $clientId)->get()->getRow();
+        if (! $client) {
+            return redirect()->to('/login');
+        }
+
         $prefixeClient = substr($client->numero, 0, 3);
         $operateurClient = $db->table('operateur_prefixe')
             ->where('prefixe', $prefixeClient)

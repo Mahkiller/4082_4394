@@ -796,3 +796,14 @@ in APPPATH\Controllers\OperateurController.php on line 266.
 10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
 11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
 12 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\nyand\\Documents\\GitHub\\4082_4394\\public\\index.php')
+CRITICAL - 2026-07-20 13:33:48 --> ErrorException: Attempt to read property "numero" on null
+[Method: GET, Route: transfert]
+in APPPATH\Controllers\Client.php on line 33.
+ 1 APPPATH\Controllers\Client.php(33): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Attempt to read property "numero" on null', 'C:\\Users\\nyand\\Documents\\GitHub\\4082_4394\\app\\Controllers\\Client.php', 33)
+ 2 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Client->transfert()
+ 3 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Client))
+ 4 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 8 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\nyand\\Documents\\GitHub\\4082_4394\\public\\index.php')
