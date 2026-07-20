@@ -23,6 +23,7 @@ $routes->group('operateur', function ($routes) {
     $routes->post('montant/modifier/(:num)', 'OperateurController::montantModifier/$1');
     $routes->get('montant/supprimer/(:num)', 'OperateurController::montantSupprimer/$1');
     $routes->get('gains', 'OperateurController::gains');
+    $routes->get('montants-envoyes', 'OperateurController::montantsEnvoyes');
     $routes->get('comptes', 'OperateurController::comptes');
     $routes->get('client/ajouter', 'OperateurController::clientAjouter');
     $routes->post('client/store', 'OperateurController::clientStore');

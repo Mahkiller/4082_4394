@@ -82,6 +82,7 @@ $activeLinks = [
                 <a class="nav-link <?= $activeLinks['prefixe'] ? 'active' : '' ?>" href="<?= base_url('operateur/prefixe') ?>"><i class="bi bi-signpost"></i> Préfixes</a>
                 <a class="nav-link <?= $activeLinks['types'] ? 'active' : '' ?>" href="<?= base_url('operateur/types') ?>"><i class="bi bi-list-check"></i> Types & barèmes</a>
                 <a class="nav-link <?= $activeLinks['gains'] ? 'active' : '' ?>" href="<?= base_url('operateur/gains') ?>"><i class="bi bi-graph-up-arrow"></i> Gains</a>
+                <a class="nav-link <?= $section === 'montants-envoyes' ? 'active' : '' ?>" href="<?= base_url('operateur/montants-envoyes') ?>"><i class="bi bi-arrow-right-circle"></i> Montants à envoyer</a>
                 <a class="nav-link <?= $activeLinks['comptes'] ? 'active' : '' ?>" href="<?= base_url('operateur/comptes') ?>"><i class="bi bi-wallet2"></i> Comptes clients</a>
                 <a class="nav-link <?= $section === 'commissions' ? 'active' : '' ?>" href="<?= base_url('operateur/commissions') ?>"><i class="bi bi-percent"></i> Commissions</a>
                 <a class="nav-link <?= $activeLinks['client'] ? 'active' : '' ?>" href="<?= base_url('operateur/client/ajouter') ?>"><i class="bi bi-person-plus"></i> Ajouter client</a>

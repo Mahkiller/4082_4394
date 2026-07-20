@@ -65,6 +65,16 @@
                 <strong><span id="montant_par_destinataire">0</span> Ar</strong> par personne
                 <br><small id="preview_frais_info"></small>
             </div>
+            <div class="mb-3">
+                <label class="form-label">Mode de frais</label>
+                <div class="btn-group w-100" role="group">
+                    <input type="radio" class="btn-check" name="frais_mode" id="frais_deductible_multiple" value="deductible" checked>
+                    <label class="btn btn-outline-mm" for="frais_deductible_multiple">Frais déductibles de l'expéditeur</label>
+
+                    <input type="radio" class="btn-check" name="frais_mode" id="frais_inclus_multiple" value="inclus">
+                    <label class="btn btn-outline-mm" for="frais_inclus_multiple">Frais inclus dans l'envoi</label>
+                </div>
+            </div>
             <button type="submit" class="btn btn-mm w-100 mt-2"><i class="bi bi-check-lg"></i> Transférer à tous</button>
         </form>
 
@@ -131,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const montantTotal = parseInt(montantTotalInput.value) || 0;
         const numeros = document.getElementById('destinataires').value.split(',').map(n => n.trim()).filter(n => n.length > 0);
         const nb = numeros.length;
-        const fraisInclus = document.getElementById('frais_inclus').checked;
+        const fraisInclus = document.getElementById('frais_inclus_multiple').checked;
         const previewFraisInfo = document.getElementById('preview_frais_info');
 
         if (nb > 0 && montantTotal > 0) {
@@ -155,6 +165,8 @@ document.addEventListener('DOMContentLoaded', function() {
     destinatairesInput.addEventListener('input', verifierOperateurDestinataire);
     document.getElementById('destinataires').addEventListener('input', updatePreview);
     montantTotalInput.addEventListener('input', updatePreview);
+    document.getElementById('frais_deductible_multiple').addEventListener('change', updatePreview);
+    document.getElementById('frais_inclus_multiple').addEventListener('change', updatePreview);
     fraisDeductibleRadio.addEventListener('change', updateFraisHelpSimple);
     fraisInclusRadio.addEventListener('change', updateFraisHelpSimple);
 });

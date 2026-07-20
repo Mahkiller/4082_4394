@@ -254,34 +254,144 @@ class OperateurController extends BaseController
 
     public function gains()
     {
-        $types   = $this->typeModel->findAll();
-        $details = [];
-        $total   = 0;
+        $types = $this->typeModel->findAll();
+        $detailsYas = [];
+        $detailsAutres = [];
+        $totalYas = 0;
+        $totalAutres = 0;
+        $totalCommissions = 0;
 
         foreach ($types as $type) {
-            $builder = $this->transactionModel->builder()
+            // Gains YAS
+            $builderYas = $this->transactionModel->builder()
                 ->join('clients', 'clients.id = transactions.client_id', 'left')
                 ->join('operateur_prefixe', "SUBSTR(clients.numero, 1, 3) = operateur_prefixe.prefixe", 'left')
                 ->join('operateur', 'operateur.id = operateur_prefixe.operateur_id', 'left');
-            $builder->selectSum('frais_applique', 'total')
+            $builderYas->selectSum('frais_applique', 'total')
                 ->selectSum('montant', 'volume')
                 ->where('transactions.transaction_type_id', $type->id)
                 ->where('operateur.nom', 'YAS')
                 ->where('status', 'Reussi');
-            $row = $builder->get()->getRow();
-            $gain = (float) ($row->total ?? 0);
-            $volume = (float) ($row->volume ?? 0);
-            $total += $gain;
-            $details[] = [
-                'type'   => $type,
-                'gain'   => $gain,
-                'volume' => $volume,
+            $rowYas = $builderYas->get()->getRow();
+            $gainYas = (float) ($rowYas->total ?? 0);
+            $volumeYas = (float) ($rowYas->volume ?? 0);
+            $totalYas += $gainYas;
+
+            // Gains autres opérateurs (frais)
+            $builderAutres = $this->transactionModel->builder()
+                ->join('clients', 'clients.id = transactions.client_id', 'left')
+                ->join('operateur_prefixe', "SUBSTR(clients.numero, 1, 3) = operateur_prefixe.prefixe", 'left')
+                ->join('operateur', 'operateur.id = operateur_prefixe.operateur_id', 'left');
+            $builderAutres->selectSum('frais_applique', 'total')
+                ->selectSum('montant', 'volume')
+                ->where('transactions.transaction_type_id', $type->id)
+                ->where('operateur.nom !=', 'YAS')
+                ->where('status', 'Reussi');
+            $rowAutres = $builderAutres->get()->getRow();
+            $gainAutres = (float) ($rowAutres->total ?? 0);
+            $volumeAutres = (float) ($rowAutres->volume ?? 0);
+
+            // Commissions vers autres opérateurs (uniquement pour transferts)
+            $commissionAutres = 0;
+            if ($type->id == 3) {
+                $builderCom = $this->transactionModel->builder()
+                    ->join('clients', 'clients.id = transactions.client_id', 'left')
+                    ->join('operateur_prefixe', "SUBSTR(clients.numero, 1, 3) = operateur_prefixe.prefixe", 'left')
+                    ->join('operateur', 'operateur.id = operateur_prefixe.operateur_id', 'left');
+                $builderCom->selectSum('commission', 'total_com')
+                    ->where('transactions.transaction_type_id', $type->id)
+                    ->where('operateur.nom !=', 'YAS')
+                    ->where('status', 'Reussi');
+                $rowCom = $builderCom->get()->getRow();
+                $commissionAutres = (float) ($rowCom->total_com ?? 0);
+            }
+
+            $gainAutresTotal = $gainAutres + $commissionAutres;
+            $totalAutres += $gainAutresTotal;
+            $totalCommissions += $commissionAutres;
+
+            $detailsYas[] = [
+                'type' => $type,
+                'gain' => $gainYas,
+                'volume' => $volumeYas,
+            ];
+            $detailsAutres[] = [
+                'type' => $type,
+                'gain' => $gainAutres,
+                'volume' => $volumeAutres,
+                'commission' => $commissionAutres,
+                'gain_total' => $gainAutresTotal,
             ];
         }
 
         return view('Opérateur/gains', [
-            'details'   => $details,
-            'total'     => $total,
+            'detailsYas'     => $detailsYas,
+            'detailsAutres'  => $detailsAutres,
+            'totalYas'       => $totalYas,
+            'totalAutres'    => $totalAutres,
+            'totalCommissions' => $totalCommissions,
+            'operateurs'     => $this->operateurModel->findAll(),
+        ]);
+    }
+
+    public function montantsEnvoyes()
+    {
+        $db = \Config\Database::connect();
+
+        $operateurs = $db->table('operateur')
+            ->where('nom !=', 'YAS')
+            ->get()
+            ->getResult();
+
+        $resultats = [];
+        foreach ($operateurs as $op) {
+            // Montant total envoye PAR YAS VERS cet operateur (destinataire commence par un prefixe de cet operateur)
+            $destPrefixes = $db->table('operateur_prefixe')
+                ->where('operateur_id', $op->id)
+                ->get()
+                ->getResult();
+            $destPrefixesList = array_column($destPrefixes, 'prefixe');
+
+            $envoye = 0;
+            if (!empty($destPrefixesList)) {
+                $builderEnvoye = $db->table('transactions')
+                    ->join('clients', 'clients.id = transactions.client_id', 'left')
+                    ->join('operateur_prefixe', "SUBSTR(clients.numero, 1, 3) = operateur_prefixe.prefixe", 'left')
+                    ->where('operateur_prefixe.operateur_id', 1)
+                    ->where('transactions.transaction_type_id', 3)
+                    ->where('status', 'Reussi')
+                    ->groupStart();
+                foreach ($destPrefixesList as $p) {
+                    $builderEnvoye->orLike('transactions.destinataire_numero', $p, 'after');
+                }
+                $builderEnvoye->groupEnd();
+                $builderEnvoye->selectSum('montant', 'total_envoye');
+                $rowEnvoye = $builderEnvoye->get()->getRow();
+                $envoye = (float) ($rowEnvoye->total_envoye ?? 0);
+            }
+
+            // Montant total recu PAR YAS DEPUIS cet operateur (emetteur appartient a cet operateur)
+            $recu = $db->table('transactions')
+                ->join('clients', 'clients.id = transactions.client_id', 'left')
+                ->join('operateur_prefixe', "SUBSTR(clients.numero, 1, 3) = operateur_prefixe.prefixe", 'left')
+                ->where('operateur_prefixe.operateur_id', $op->id)
+                ->where('transactions.transaction_type_id', 3)
+                ->where('status', 'Reussi')
+                ->selectSum('montant', 'total_recu')
+                ->get()
+                ->getRow();
+            $totalRecu = (float) ($recu->total_recu ?? 0);
+
+            $resultats[] = [
+                'operateur' => $op,
+                'total_envoye' => $envoye,
+                'total_recu' => $totalRecu,
+                'net' => $envoye - $totalRecu,
+            ];
+        }
+
+        return view('Opérateur/montants_envoyes', [
+            'resultats' => $resultats,
             'operateurs' => $this->operateurModel->findAll(),
         ]);
     }

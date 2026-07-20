@@ -98,6 +98,7 @@ class Transaction extends BaseController
             ->getRow();
 
         $fraisTransaction = $row ? (float) $row->frais_montant : 0;
+        $fraisMode = $this->request->getPost('frais_mode') ?? 'deductible';
 
         if ($montant + $fraisTransaction > session()->get('user_solde')) {
             return redirect()->to('/transfert')->with('error', 'Solde insuffisant pour effectuer ce transfert.');
@@ -144,14 +145,20 @@ class Transaction extends BaseController
             }
         }
 
-        $totalDebit = $montant + $fraisTransaction + $commission;
+        if ($fraisMode === 'inclus') {
+            $montantRecu = max(0, $montant - $fraisTransaction);
+            $totalDebit = $montant + $commission;
+        } else {
+            $montantRecu = $montant;
+            $totalDebit = $montant + $fraisTransaction + $commission;
+        }
 
         if ($totalDebit > session()->get('user_solde')) {
             return redirect()->to('/transfert')->with('error', 'Solde insuffisant pour effectuer ce transfert.');
         }
 
         $nouveauSoldeEmetteur = session()->get('user_solde') - $totalDebit;
-        $nouveauSoldeDestinataire = $destinataireRow->solde + $montant;
+        $nouveauSoldeDestinataire = $destinataireRow->solde + $montantRecu;
 
         $reference = 'TXN-' . date('Ymd') . '-' . random_int(1000, 9999);
 
@@ -171,7 +178,7 @@ class Transaction extends BaseController
             'transaction_type_id' => $typeTransaction,
             'montant' => $montant,
             'frais_applique' => $fraisTransaction,
-            'montant_net' => $montant,
+            'montant_net' => $montantRecu,
             'commission' => $commission,
             'destinataire_numero' => $destinataire,
             'reference' => $reference,
@@ -216,6 +223,7 @@ class Transaction extends BaseController
             ->getRow();
 
         $fraisTransaction = $row ? $row->frais_montant : 0;
+        $fraisMode = $this->request->getPost('frais_mode') ?? 'deductible';
 
         if ($montantTotal + $fraisTransaction > session()->get('user_solde')) {
             return redirect()->to('/transfert')->with('error', 'Solde insuffisant pour effectuer ce transfert multiple.');
@@ -268,7 +276,13 @@ class Transaction extends BaseController
             ->update(['solde' => $nouveauSoldeEmetteur]);
 
         foreach ($destinataires as $dest) {
-            $nouveauSoldeDestinataire = $dest->solde + $montantParDestinataire;
+            if ($fraisMode === 'inclus') {
+                $montantRecuParDest = max(0, $montantParDestinataire - $fraisTransaction);
+            } else {
+                $montantRecuParDest = $montantParDestinataire;
+            }
+
+            $nouveauSoldeDestinataire = $dest->solde + $montantRecuParDest;
 
             $db->table('clients')
                 ->where('id', $dest->id)
@@ -279,8 +293,8 @@ class Transaction extends BaseController
                 'client_id' => $clientId,
                 'transaction_type_id' => $typeTransaction,
                 'montant' => $montantParDestinataire,
-                'frais_applique' => 0,
-                'montant_net' => $montantParDestinataire,
+                'frais_applique' => $fraisTransaction,
+                'montant_net' => $montantRecuParDest,
                 'reference' => $reference,
                 'status' => 'Reussi',
             ]);
