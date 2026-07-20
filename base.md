@@ -1,4 +1,16 @@
 
+-- Ouvrir SQLite avec la base
+sqlite3 exam_S4_design_4082_4394.db
+
+-- Exécuter le script complet
+sqlite> .read base.sql
+
+-- Vérifier les tables
+sqlite> .tables
+
+-- Quitter
+sqlite> .exit
+
 
 # Guide d'installation et de configuration - Application Mobile Money
 
@@ -35,8 +47,7 @@
 ├── .env # Configuration (ignoré par Git)
 ├── .env.example # Template de configuration
 ├── .gitignore # Fichiers ignorés par Git
-├── base.sql # Script de création de la base
-├── donne.sql # Script d'insertion des données
+├── base.sql # Script complet (création + données)
 ├── base.md # Ce fichier
 └── spark
 
@@ -45,48 +56,49 @@
 
 ## 🗄️ Installation de la base de données
 
-### 1. Création de la base
+### 1. Création de la base et insertion des données
+
+Le fichier `base.sql` contient **tout en un seul fichier** :
+
+- ✅ Création des tables
+- ✅ Création des triggers
+- ✅ Création des index
+- ✅ Insertion des données de test
+- ✅ Vues SQL
+
+#### Méthode 1 : Depuis PowerShell
 
 ```powershell
-# Ouvrir SQLite avec la base
+# Créer la base et exécuter le script complet
+sqlite3 exam_S4_design_4082_4394.db < base.sql
+
+-- Ouvrir SQLite avec la base
 sqlite3 exam_S4_design_4082_4394.db
 
-# Exécuter le script de création
+-- Exécuter le script complet
 sqlite> .read base.sql
 
-# Vérifier les tables
+-- Vérifier les tables
 sqlite> .tables
 
-# Quitter
+-- Quitter
 sqlite> .exit
-```
 
+# PowerShell
+Get-Content base.sql | sqlite3 exam_S4_design_4082_4394.db
 
-# Ouvrir SQLite avec la base
-
+-- Ouvrir la base
 sqlite3 exam_S4_design_4082_4394.db
 
-# Exécuter le script d'insertion
-
-sqlite> .read donne.sql
-
-# Vérifier les données
-
-sqlite> SELECT COUNT(*) FROM clients;        -- 18 clients
-sqlite> SELECT COUNT(*) FROM transactions;   -- 17 transactions
-sqlite> SELECT COUNT(*) FROM operateur;      -- 3 opérateurs
-
-# Quitter
-
-sqlite> .exit
-
-
+-- Activer l'affichage
+sqlite> .headers on
+sqlite> .mode column
 
 -- Vérifier toutes les tables
-SELECT name FROM sqlite_master WHERE type='table';
+sqlite> SELECT name FROM sqlite_master WHERE type='table';
 
 -- Compter les lignes par table
-SELECT
+sqlite> SELECT
     (SELECT COUNT(*) FROM operateur) AS operateurs,
     (SELECT COUNT(*) FROM operateur_prefixe) AS prefixes,
     (SELECT COUNT(*) FROM transaction_type) AS types_transaction,
@@ -95,10 +107,13 @@ SELECT
     (SELECT COUNT(*) FROM transactions) AS transactions;
 
 -- Afficher les 5 plus gros soldes
-SELECT numero, solde FROM clients ORDER BY solde DESC LIMIT 5;
+sqlite> SELECT numero, solde FROM clients ORDER BY solde DESC LIMIT 5;
+
+-- Afficher tous les clients
+sqlite> SELECT * FROM clients;
 
 -- Statistiques des transactions par type
-SELECT
+sqlite> SELECT
     tt.label,
     COUNT(*) AS nb_transactions,
     SUM(montant) AS total_montant,
@@ -107,3 +122,16 @@ FROM transactions t
 JOIN transaction_type tt ON t.transaction_type_id = tt.id
 WHERE t.status = 'Reussi'
 GROUP BY tt.label;
+
+-- Voir les clients avec leur opérateur
+sqlite> SELECT 
+    c.id,
+    c.numero,
+    c.solde,
+    o.nom AS operateur,
+    op.prefixe
+FROM clients c
+JOIN operateur_prefixe op ON c.numero LIKE op.prefixe || '%'
+JOIN operateur o ON op.operateur_id = o.id
+ORDER BY o.nom, c.numero;
+```
