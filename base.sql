@@ -220,9 +220,20 @@ CREATE TABLE IF NOT EXISTS promotions (
     pourcentage DECIMAL(5,2) DEFAULT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    est_actif BOOLEAN DEFAULT 1,
     FOREIGN KEY (transaction_id) REFERENCES transactions(id),
     FOREIGN KEY (operateur_id) REFERENCES operateur(id),
     CONSTRAINT unique_transaction UNIQUE (transaction_id)
 );
 
 INSERT INTO promotions (operateur_id, transaction_id, pourcentage) VALUES (1, 2, 10.00);
+
+CREATE TABLE IF NOT EXISTS epargnes (
+    client_id INTEGER NOT NULL,
+    pourcentage_epargne DECIMAL(5,2) NOT NULL DEFAULT 0.00,
+    solde_epargne DECIMAL(15,2) NOT NULL DEFAULT 0,
+    FOREIGN KEY (client_id) REFERENCES clients(id),
+    CONSTRAINT unique_client UNIQUE (client_id)
+);
+
+INSERT INTO epargnes (client_id, pourcentage_epargne) VALUES (1, 0.01);

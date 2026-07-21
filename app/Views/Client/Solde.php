@@ -27,6 +27,12 @@ $solde = session()->get('user_solde');
             <a href="<?= base_url('transfert') ?>" class="action-tile transfert">
                 <i class="bi bi-send"></i> Transfert
             </a>
+            <a href="/epargneform" class="action-tile transfert">
+                <i class="bi bi-send"></i> Configurer votre pourcentage d'epargne
+            </a>
+            <a href="/epargnesolde" class="action-tile transfert">
+                <i class="bi bi-send"></i> Voir votre solde dans l'epargne
+            </a>
         </div>
 
         <a href="<?= base_url('historique') ?>" class="back-link"><i class="bi bi-clock-history"></i> Voir mon historique</a>

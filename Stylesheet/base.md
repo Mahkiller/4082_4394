@@ -1,4 +1,3 @@
-
 -- Ouvrir SQLite avec la base
 sqlite3 exam_S4_design_4082_4394.db
 
@@ -10,7 +9,6 @@ sqlite> .tables
 
 -- Quitter
 sqlite> .exit
-
 
 # Guide d'installation et de configuration - Application Mobile Money
 
@@ -50,7 +48,6 @@ sqlite> .exit
 ├── base.sql # Script complet (création + données)
 ├── base.md # Ce fichier
 └── spark
-
 
 ---
 

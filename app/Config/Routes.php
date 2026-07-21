@@ -52,3 +52,5 @@ $routes->get('/transfert', 'Client::transfert');
 $routes->post('/transfert', 'Transaction::faireTransfert');
 $routes->post('/transfert-multiple', 'Transaction::faireTransfertMultiple');
 $routes->get('/logout', 'Client::logout');
+$routes->get('/epargneform', 'Client::formEpargne');
+$routes->get('/epargnesolde', 'Client::soldeEpargne');

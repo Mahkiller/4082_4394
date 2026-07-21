@@ -24,6 +24,16 @@ class Client extends BaseController
         return view('Client/Retrait');
     }
 
+    public function formEpargne ()
+    {
+        return view('Client/FormEpargne');
+    }
+
+    public function soldeEpargne ()
+    {
+        return view('Client/EpargneSolde');
+    }
+
     public function transfert()
     {
         $db = \Config\Database::connect();

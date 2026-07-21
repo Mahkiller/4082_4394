@@ -1,0 +1,13 @@
+Promotion entre meme operateur pour les transfert entre meme operateur, Promotion en pourcentage, on doit l'avoir dans la base
+Necessaire: nouvelle table promotion(id, transaction_id, pourcentage
+
+Epargne avec pourcentage
+page pour choisir le %tage pour chaque client
+le pourcentage lasa any am epargne de ny ambony tonga ao amle compte
+
+table epargne (id_client, pourcentage_epargne, solde_epargne);
+
+vue pour entrer le % pour l'epargnes
+
+fonction qui creer le pourcentage pour l'epargne
+
