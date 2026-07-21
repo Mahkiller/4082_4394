@@ -137,6 +137,43 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function showConfirmTransfert(e) {
+        e.preventDefault();
+        const montant = parseFloat(document.getElementById('montant_simple').value) || 0;
+        const destinataire = document.getElementById('destinataire').value.trim();
+        const fraisMode = document.querySelector('input[name="frais_mode"]:checked').value;
+        if (montant <= 0 || !destinataire) return;
+
+        fetch('<?= site_url('api/calcul-frais') ?>', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
+            body: 'type=3&montant=' + montant + '&destinataire=' + encodeURIComponent(destinataire) + '&frais_mode=' + fraisMode + '&<?= csrf_token() ?>=<?= csrf_hash() ?>'
+        })
+        .then(r => r.json())
+        .then(data => {
+            const frais = data.frais || 0;
+            const commission = data.commission || 0;
+            const montantRecu = data.montant_recu || montant;
+            const totalDebit = data.total_debit || montant;
+            let html = `
+                <tr><td>Montant envoyé</td><td class="text-end">${montant.toLocaleString('fr-FR')} Ar</td></tr>
+                <tr><td>Frais</td><td class="text-end text-danger">- ${frais.toLocaleString('fr-FR')} Ar</td></tr>
+            `;
+            if (commission > 0) {
+                html += `<tr><td>Commission inter-opérateur</td><td class="text-end text-warning">- ${commission.toLocaleString('fr-FR')} Ar</td></tr>`;
+            }
+            html += `<tr class="table-light"><td><strong>Total débité</strong></td><td class="text-end fw-bold text-danger"><strong>${totalDebit.toLocaleString('fr-FR')} Ar</strong></td></tr>`;
+            html += `<tr><td>Destinataire reçoit</td><td class="text-end text-success">${montantRecu.toLocaleString('fr-FR')} Ar</td></tr>`;
+            document.getElementById('confirm_message').textContent = 'Vous allez effectuer un transfert de :';
+            document.getElementById('confirm_details').innerHTML = html;
+            const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+            modal.show();
+            document.getElementById('confirm_btn').onclick = function() {
+                e.target.submit();
+            };
+        });
+    }
+
     function updatePreview() {
         const montantTotal = parseInt(montantTotalInput.value) || 0;
         const numeros = document.getElementById('destinataires').value.split(',').map(n => n.trim()).filter(n => n.length > 0);
@@ -160,6 +197,44 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function showConfirmTransfertMultiple(e) {
+        e.preventDefault();
+        const montantTotal = parseInt(montantTotalInput.value) || 0;
+        const destinataires = document.getElementById('destinataires').value.split(',').map(n => n.trim()).filter(n => n.length > 0);
+        const fraisMode = document.querySelector('input[name="frais_mode"]:checked').value;
+        if (montantTotal <= 0 || destinataires.length === 0) return;
+
+        fetch('<?= site_url('api/calcul-frais') ?>', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
+            body: 'type=3&montant=' + montantTotal + '&frais_mode=' + fraisMode + '&<?= csrf_token() ?>=<?= csrf_hash() ?>'
+        })
+        .then(r => r.json())
+        .then(data => {
+            const frais = data.frais || 0;
+            const commission = data.commission || 0;
+            const totalDebit = data.total_debit || montantTotal;
+            const parPersonne = Math.floor(montantTotal / destinataires.length);
+            let html = `
+                <tr><td>Montant total</td><td class="text-end">${montantTotal.toLocaleString('fr-FR')} Ar</td></tr>
+                <tr><td>Nb destinataires</td><td class="text-end">${destinataires.length}</td></tr>
+                <tr><td>Par personne</td><td class="text-end">${parPersonne.toLocaleString('fr-FR')} Ar</td></tr>
+                <tr><td>Frais</td><td class="text-end text-danger">- ${frais.toLocaleString('fr-FR')} Ar</td></tr>
+            `;
+            if (commission > 0) {
+                html += `<tr><td>Commission inter-opérateur</td><td class="text-end text-warning">- ${commission.toLocaleString('fr-FR')} Ar</td></tr>`;
+            }
+            html += `<tr class="table-light"><td><strong>Total débité</strong></td><td class="text-end fw-bold text-danger"><strong>${totalDebit.toLocaleString('fr-FR')} Ar</strong></td></tr>`;
+            document.getElementById('confirm_message').textContent = 'Vous allez effectuer un transfert multiple de :';
+            document.getElementById('confirm_details').innerHTML = html;
+            const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+            modal.show();
+            document.getElementById('confirm_btn').onclick = function() {
+                e.target.submit();
+            };
+        });
+    }
+
     modeSimple.addEventListener('change', switchMode);
     modeMultiple.addEventListener('change', switchMode);
     destinatairesInput.addEventListener('input', verifierOperateurDestinataire);
@@ -169,6 +244,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('frais_inclus_multiple').addEventListener('change', updatePreview);
     fraisDeductibleRadio.addEventListener('change', updateFraisHelpSimple);
     fraisInclusRadio.addEventListener('change', updateFraisHelpSimple);
+
+    document.getElementById('form_simple').addEventListener('submit', showConfirmTransfert);
+    document.getElementById('form_multiple').addEventListener('submit', showConfirmTransfertMultiple);
 });
 </script>
 <?= $this->endSection() ?>

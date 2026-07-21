@@ -44,5 +44,28 @@ function clientActive($current, $seg): string
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <?= $this->renderSection('scripts') ?>
+
+<div class="modal fade" id="confirmModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmer l'opération</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="confirm_message"></p>
+                <div class="table-responsive">
+                    <table class="table table-sm mb-0">
+                        <tbody id="confirm_details"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-mm" id="confirm_btn">Confirmer</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

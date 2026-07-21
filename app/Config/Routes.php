@@ -37,6 +37,7 @@ $routes->group('operateur', function ($routes) {
     $routes->get('commission/supprimer/(:num)', 'OperateurController::commissionSupprimer/$1');
 });
 //Authentification
+$routes->post('/api/calcul-frais', 'Transaction::calculFrais');
 $routes->get('/login', 'Client::login');
 $routes->post('/login', 'Auth::loginAuth');
 

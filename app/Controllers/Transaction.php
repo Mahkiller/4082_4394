@@ -194,6 +194,67 @@ class Transaction extends BaseController
         return redirect()->to('/solde')->with('success', 'Transfert effectué avec succès.');
     }
 
+    public function calculFrais()
+    {
+        $type = (int) $this->request->getPost('type');
+        $montant = (float) $this->request->getPost('montant');
+        $destinataire = trim($this->request->getPost('destinataire') ?? '');
+        $fraisMode = $this->request->getPost('frais_mode') ?? 'deductible';
+        $db = \Config\Database::connect();
+
+        $row = $db->table('montant')
+            ->where('transaction_type_id', $type)
+            ->where('min_montant <=', $montant)
+            ->where('max_montant >=', $montant)
+            ->get()
+            ->getRow();
+
+        $fraisTransaction = $row ? (float) $row->frais_montant : 0;
+        $commission = 0.0;
+        $montantRecu = $montant;
+        $totalDebit = $montant + $fraisTransaction;
+
+        if ($type == 3 && !empty($destinataire)) {
+            $emetteur = $db->table('clients')->where('id', session()->get('user_id'))->get()->getRow();
+            if ($emetteur) {
+                $sourcePrefixe = substr($emetteur->numero, 0, 3);
+                $sourceOpRow = $db->table('operateur_prefixe')->where('prefixe', $sourcePrefixe)->get()->getRow();
+                $destRow = $db->table('clients')->where('numero', $destinataire)->get()->getRow();
+                if ($destRow) {
+                    $destPrefixe = substr($destRow->numero, 0, 3);
+                    $destOpRow = $db->table('operateur_prefixe')->where('prefixe', $destPrefixe)->get()->getRow();
+                    $sourceOpId = $sourceOpRow ? (int) $sourceOpRow->operateur_id : null;
+                    $destOpId = $destOpRow ? (int) $destOpRow->operateur_id : null;
+                    if ($sourceOpId && $destOpId && $sourceOpId != $destOpId) {
+                        $com = $db->table('commission')
+                            ->where('operateur_source_id', $sourceOpId)
+                            ->where('operateur_destinataire_id', $destOpId)
+                            ->where('est_actif', 1)
+                            ->get()
+                            ->getRow();
+                        if ($com) {
+                            $commission = (float) $com->pourcentage / 100 * $montant;
+                        }
+                    }
+                }
+            }
+
+            if ($fraisMode === 'inclus') {
+                $montantRecu = max(0, $montant - $fraisTransaction);
+                $totalDebit = $montant + $commission;
+            } else {
+                $totalDebit = $montant + $fraisTransaction + $commission;
+            }
+        }
+
+        return $this->response->setJSON([
+            'frais' => $fraisTransaction,
+            'commission' => $commission,
+            'montant_recu' => $montantRecu,
+            'total_debit' => $totalDebit,
+        ]);
+    }
+
     public function faireTransfertMultiple()
     {
         $montantTotal = $this->request->getPost('montant_total');
