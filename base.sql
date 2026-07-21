@@ -212,3 +212,17 @@ VALUES (3, 1, 10.00, 'Commission AIRTEL vers YAS');
 -- Commission AIRTEL → ORANGE (10%)
 INSERT INTO commission (operateur_source_id, operateur_destinataire_id, pourcentage, description) 
 VALUES (3, 2, 10.00, 'Commission AIRTEL vers ORANGE');
+
+CREATE TABLE IF NOT EXISTS promotions (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    transaction_id INTEGER NOT NULL,
+    operateur_id INTEGER NOT NULL,
+    pourcentage DECIMAL(5,2) DEFAULT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (transaction_id) REFERENCES transactions(id),
+    FOREIGN KEY (operateur_id) REFERENCES operateur(id),
+    CONSTRAINT unique_transaction UNIQUE (transaction_id)
+);
+
+INSERT INTO promotions (operateur_id, transaction_id, pourcentage) VALUES (1, 2, 10.00);
